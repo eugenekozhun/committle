@@ -45,8 +45,11 @@ class GitBranchServiceImpl(
         return repository ?: error("Git repository not found for the selected file.")
     }
 
-    private fun getFirstRepo(gitRepositoryManager: GitRepositoryManager): GitLocalBranch = (gitRepositoryManager.repositories.firstOrNull()?.currentBranch
-        ?: error("Current git branch not found."))
+    private fun getFirstRepo(gitRepositoryManager: GitRepositoryManager): GitLocalBranch {
+        return gitRepositoryManager.repositories.firstOrNull()
+            ?.currentBranch
+            ?: error("Current git branch not found.")
+    }
 
     companion object {
         @JvmStatic
