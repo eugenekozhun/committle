@@ -1,5 +1,7 @@
 package com.kozhun.commitmessagetemplate.service.replacer
 
+import com.intellij.openapi.actionSystem.AnActionEvent
+
 /**
  * A functional interface for replacing substrings in a given message.
  */
@@ -11,5 +13,5 @@ fun interface Replacer {
      * @param message The message to be processed.
      * @return The modified message with replaced characters.
      */
-    fun replace(message: String): String
+    fun replace(message: String, anActionEvent: AnActionEvent): String
 }

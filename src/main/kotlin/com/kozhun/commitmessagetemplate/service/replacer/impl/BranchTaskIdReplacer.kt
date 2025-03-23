@@ -1,11 +1,12 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TASK_ID_REGEX
-import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.util.branches
 import com.kozhun.commitmessagetemplate.util.storage
 import com.kozhun.commitmessagetemplate.util.toCase
@@ -27,12 +28,12 @@ class BranchTaskIdReplacer(
      * @param message the original message that may contain TASK_ID_ANCHOR.
      * @return the message with TASK_ID_ANCHOR replaced by the task ID from the current branch.
      */
-    override fun replace(message: String): String {
-        return message.replace(ANCHOR, getTaskIdFromCurrentBranch())
+    override fun replace(message: String, anActionEvent: AnActionEvent): String {
+        return message.replace(ANCHOR, getTaskIdFromCurrentBranch(anActionEvent))
     }
 
-    private fun getTaskIdFromCurrentBranch(): String {
-        return project.branches().getCurrentBranch().name
+    private fun getTaskIdFromCurrentBranch(anActionEvent: AnActionEvent): String {
+        return project.branches().getCurrentBranch(anActionEvent).name
             .let { getTaskIdRegex().find(it)?.value }
             ?.let { changeCase(it) }
             ?: getDefaultTaskIdValue()

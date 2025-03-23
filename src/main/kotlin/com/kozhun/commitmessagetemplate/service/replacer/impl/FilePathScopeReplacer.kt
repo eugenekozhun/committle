@@ -1,12 +1,13 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SEPARATOR
-import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.util.storage
 import com.kozhun.commitmessagetemplate.util.toCase
 import com.kozhun.commitmessagetemplate.util.toNotBlankRegex
@@ -16,7 +17,7 @@ class FilePathScopeReplacer(
     private val project: Project
 ) : Replacer {
 
-    override fun replace(message: String): String {
+    override fun replace(message: String, anActionEvent: AnActionEvent): String {
         val scope = extractScope()
         return message.replace(ANCHOR, scope)
     }

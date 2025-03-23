@@ -32,7 +32,7 @@ class GenerateCommitMessageAction : DumbAwareAction() {
             ?.apply {
                 val formatter = CommitMessageFormatterDefaultImpl.getInstance(anActionEvent.project!!)
                 val caretService = CaretServiceDefaultImpl.getInstance(anActionEvent.project!!)
-                val (message, caretOffset) = formatter.getFormattedCommitMessage()
+                val (message, caretOffset) = formatter.getFormattedCommitMessage(anActionEvent)
                     .let(caretService::getCaretOffsetByAnchor)
                 setCommitMessageWithCaretOffset(message, caretOffset)
             }

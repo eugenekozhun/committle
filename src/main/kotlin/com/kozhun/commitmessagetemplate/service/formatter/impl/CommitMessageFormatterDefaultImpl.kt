@@ -1,5 +1,6 @@
 package com.kozhun.commitmessagetemplate.service.formatter.impl
 
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -23,9 +24,9 @@ class CommitMessageFormatterDefaultImpl(
 
     private val whitespaceService = WhitespaceServiceDefaultImpl.getInstance(project)
 
-    override fun getFormattedCommitMessage(): String {
+    override fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
         val pattern = project.storage().state.pattern.orEmpty()
-        return replacers.fold(pattern) { result, replacer -> replacer.replace(result) }
+        return replacers.fold(pattern) { result, replacer -> replacer.replace(result, anActionEvent) }
             .let { whitespaceService.format(it) }
     }
 

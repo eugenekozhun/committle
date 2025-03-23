@@ -1,11 +1,12 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TYPE_REGEX
-import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.util.branches
 import com.kozhun.commitmessagetemplate.util.storage
 import com.kozhun.commitmessagetemplate.util.toCase
@@ -20,13 +21,13 @@ import com.kozhun.commitmessagetemplate.util.toNotBlankRegex
 class BranchTypeReplacer(
     private val project: Project
 ) : Replacer {
-    override fun replace(message: String): String {
-        return changeCase(replaceWithSynonym(getTypeFromCurrentBranch()))
+    override fun replace(message: String, anActionEvent: AnActionEvent): String {
+        return changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
             .let { message.replace(ANCHOR, it) }
     }
 
-    private fun getTypeFromCurrentBranch(): String {
-        return project.branches().getCurrentBranch().name
+    private fun getTypeFromCurrentBranch(anActionEvent: AnActionEvent): String {
+        return project.branches().getCurrentBranch(anActionEvent).name
             .let { getTypeRegex().find(it)?.value }
             ?: getDefaultTypeValue()
     }
