@@ -1,18 +1,27 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
+import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.git.branch.GitBranchService
 import com.kozhun.commitmessagetemplate.service.git.branch.impl.GitBranchServiceImpl
-import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.storage.SettingsState
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import git4idea.GitLocalBranch
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import org.junit.jupiter.api.AfterEach
 
 abstract class BaseReplacerTest {
-    protected lateinit var projectMock: Project
+    protected var projectMock = mockk<Project>()
+    protected var anActionEventMock = mockk<AnActionEvent>()
+
+    @AfterEach
+    fun tearDown() {
+        unmockkAll()
+    }
 
     protected fun mockBranchName(branchName: String) {
         mockkStatic(GitBranchServiceImpl::class)
@@ -21,7 +30,7 @@ abstract class BaseReplacerTest {
         val gitLocalBranchMock = mockk<GitLocalBranch>()
 
         every { gitLocalBranchMock.name } returns branchName
-        every { gitBranchServiceMock.getCurrentBranch() } returns gitLocalBranchMock
+        every { gitBranchServiceMock.getCurrentBranch(anActionEventMock) } returns gitLocalBranchMock
         every { GitBranchServiceImpl.getInstance(projectMock) } returns gitBranchServiceMock
     }
 
