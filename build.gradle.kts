@@ -6,15 +6,15 @@ val kotlinxSerializationJson = "1.7.3"
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.1.10"
+    id("org.jetbrains.kotlin.jvm") version "2.1.21"
     id("org.jetbrains.intellij") version "1.17.4"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
 
-    kotlin("plugin.serialization") version "2.1.10"
+    kotlin("plugin.serialization") version "2.1.21"
 }
 
 group = "com.kozhun"
-version = "2.0.0"
+version = "2.1.0"
 
 sourceSets["main"].java.srcDirs("src/main/gen")
 
@@ -58,7 +58,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("231")
-        untilBuild.set("251.*")
+        untilBuild.set("252.*")
     }
 
     signPlugin {
