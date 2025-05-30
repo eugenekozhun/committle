@@ -22,10 +22,10 @@ class GitBranchServiceImpl(
     override fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch {
         val gitRepositoryManager = GitRepositoryManager.getInstance(project)
 
-        return getRepoByChanges(anActionEvent, gitRepositoryManager) ?: getFirstRepo(gitRepositoryManager)
+        return getCurrentBranchForSelectedChange(anActionEvent, gitRepositoryManager) ?: getCurrentBranchFromFirstRepo(gitRepositoryManager)
     }
 
-    private fun getRepoByChanges(anActionEvent: AnActionEvent, gitRepositoryManager: GitRepositoryManager): GitLocalBranch? {
+    private fun getCurrentBranchForSelectedChange(anActionEvent: AnActionEvent, gitRepositoryManager: GitRepositoryManager): GitLocalBranch? {
         return anActionEvent.getData(VcsDataKeys.SELECTED_CHANGES)
             ?.firstOrNull()
             ?.virtualFile
@@ -45,7 +45,7 @@ class GitBranchServiceImpl(
         return repository ?: error("Git repository not found for the selected file.")
     }
 
-    private fun getFirstRepo(gitRepositoryManager: GitRepositoryManager): GitLocalBranch {
+    private fun getCurrentBranchFromFirstRepo(gitRepositoryManager: GitRepositoryManager): GitLocalBranch {
         return gitRepositoryManager.repositories.firstOrNull()
             ?.currentBranch
             ?: error("Current git branch not found.")
