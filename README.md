@@ -10,6 +10,7 @@
     <a href="https://plugins.jetbrains.com/plugin/23100-commit-message-template"><img alt="plugin's rating" src="https://img.shields.io/jetbrains/plugin/r/stars/23100-commit-message-template?style=flat-square"/></a>
     <a href="https://github.com/EugeneKozhun/commit-message-template/actions/workflows/publish-workflow.yml"><img alt="deploy" src="https://img.shields.io/github/actions/workflow/status/EugeneKozhun/commit-message-template/publish-workflow.yml?label=deploy&style=flat-square&logo=github"/></a>
     <a href="https://github.com/EugeneKozhun/commit-message-template/blob/main/LICENSE.md"><img alt="plugin's license" src="https://img.shields.io/github/license/EugeneKozhun/commit-message-template?style=flat-square"/></a>
+    <a href="https://ko-fi.com/eugenekozhun"><img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Support%20me-Ko--fi-ff5f5f?style=flat-square&logo=ko-fi&logoColor=white"/></a>
 </p>
 
 ✨ **Committle** (ex. Commit Message Template)
@@ -28,13 +29,6 @@ _Compatible with [Conventional Commits](https://www.conventionalcommits.org/)_
     - Default values for variables
 - Whitespace and caret formatting: Fine-tune alignment and position.
 - Shortcut for applying the template: Fast and efficient workflow.
-
-## 🛠️ Installation
-
-1. Open JetBrains IDE.
-2. Navigate to `File > Settings > Plugins`.
-3. Select the `Marketplace` tab.
-4. Search for `Committle` and click `Install`.
 
 ## 💡 How to Use
 
@@ -63,16 +57,15 @@ Description of changes
 Closes $TASK-ID
 ```
 
-## 🏆 Benefits
-
-- **Consistency**: Your commit messages will always follow the agreed-upon structure.
-- **Time-saving**: No need to manually format messages every time.
-- **Simplicity**: Works out of the box with minimal configuration.
-
-## 🤝 Support
+## 🤝 Bug Reporting
 
 Found a bug? Have an idea for improvement? Feel free to create an issue in the
 repository: [GitHub Issues](https://github.com/EugeneKozhun/commit-message-template/issues).
+
+## ☕ Support My Work
+
+If you find this project helpful, consider [buying me a coffee](https://ko-fi.com/eugenekozhun) —
+your support helps me keep going!
 
 --- 
 © 2025 Eugene Kozhun
