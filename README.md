@@ -57,7 +57,7 @@ Description of changes
 Closes $TASK-ID
 ```
 
-## 🤝 Bug Reporting
+## 🐞 Bug Reporting
 
 Found a bug? Have an idea for improvement? Feel free to create an issue in the
 repository: [GitHub Issues](https://github.com/EugeneKozhun/commit-message-template/issues).
