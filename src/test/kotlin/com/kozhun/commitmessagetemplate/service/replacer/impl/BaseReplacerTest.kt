@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 
 abstract class BaseReplacerTest {
@@ -30,7 +31,11 @@ abstract class BaseReplacerTest {
         val gitLocalBranchMock = mockk<GitLocalBranch>()
 
         every { gitLocalBranchMock.name } returns branchName
-        every { gitBranchServiceMock.getCurrentBranch(anActionEventMock) } returns gitLocalBranchMock
+        every {
+            runBlocking {
+                gitBranchServiceMock.getCurrentBranch(anActionEventMock)
+            }
+        } returns gitLocalBranchMock
         every { GitBranchServiceImpl.getInstance(projectMock) } returns gitBranchServiceMock
     }
 

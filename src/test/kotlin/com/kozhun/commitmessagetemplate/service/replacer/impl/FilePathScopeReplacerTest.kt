@@ -5,6 +5,7 @@ import com.kozhun.commitmessagetemplate.enums.StringCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -17,7 +18,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         mockSettingState()
         mockAffectedPaths()
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("", replacer.replace("", anActionEventMock))
+        assertEquals("", runBlocking {
+            replacer.replace("", anActionEventMock)
+        })
     }
 
     @Test
@@ -27,7 +30,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         )
         mockAffectedPaths()
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("cmt: default message", replacer.replace("$ANCHOR: default message", anActionEventMock))
+        assertEquals("cmt: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
     }
 
     @Test
@@ -42,7 +47,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             "project/project/project/project/project.kt"
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("cmt: default message", replacer.replace("$ANCHOR: default message", anActionEventMock))
+        assertEquals("cmt: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
     }
 
     @Test
@@ -57,7 +64,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             "project/project/project/project/project.kt"
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("project: default message", replacer.replace("$ANCHOR: default message", anActionEventMock))
+        assertEquals("project: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
     }
 
     @Test
@@ -72,7 +81,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             "project/project/project/project/project.kt"
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("test|project: default message", replacer.replace("$ANCHOR: default message", anActionEventMock))
+        assertEquals("test|project: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
     }
 
     @Test
@@ -88,7 +99,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             "project/project/project/project/project.kt"
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("test,project: default message", replacer.replace("$ANCHOR: default message", anActionEventMock))
+        assertEquals("test,project: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
     }
 
     @Test
@@ -103,7 +116,9 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             "project/project/project/project/project.kt"
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
-        assertEquals("TEST|PROJECT: default message", replacer.replace("$ANCHOR: default message", anActionEventMock))
+        assertEquals("TEST|PROJECT: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
     }
 
     private fun mockAffectedPaths(vararg paths: String) {

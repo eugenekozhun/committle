@@ -14,6 +14,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -50,7 +51,10 @@ class GitBranchServiceImplTest {
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
 
-        val result = gitBranchService.getCurrentBranch(anActionEventMock)
+        val result = runBlocking {
+            gitBranchService.getCurrentBranch(anActionEventMock)
+        }
+
         assertEquals(gitBranchMock, result)
     }
 
@@ -65,7 +69,9 @@ class GitBranchServiceImplTest {
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
 
         val exception = assertThrows<IllegalStateException> {
-            gitBranchService.getCurrentBranch(anActionEventMock)
+            runBlocking {
+                gitBranchService.getCurrentBranch(anActionEventMock)
+            }
         }
         assertEquals("Current git branch not found.", exception.message)
     }
@@ -92,7 +98,9 @@ class GitBranchServiceImplTest {
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
         every { anActionEventMock.getData(VcsDataKeys.SELECTED_CHANGES) } returns arrayOf(changeMock)
 
-        val result = gitBranchService.getCurrentBranch(anActionEventMock)
+        val result = runBlocking {
+            gitBranchService.getCurrentBranch(anActionEventMock)
+        }
         assertEquals(gitBranchMock, result)
     }
 
@@ -117,7 +125,9 @@ class GitBranchServiceImplTest {
         every { anActionEventMock.getData(VcsDataKeys.SELECTED_CHANGES) } returns arrayOf(changeMock)
 
         val exception = assertThrows<IllegalStateException> {
-            gitBranchService.getCurrentBranch(anActionEventMock)
+            runBlocking {
+                gitBranchService.getCurrentBranch(anActionEventMock)
+            }
         }
         assertEquals("Git repository not found for the selected file.", exception.message)
     }
@@ -135,7 +145,9 @@ class GitBranchServiceImplTest {
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
 
-        val result = gitBranchService.getCurrentBranch(anActionEventMock)
+        val result = runBlocking {
+            gitBranchService.getCurrentBranch(anActionEventMock)
+        }
         assertEquals(gitBranchMock, result)
     }
 
@@ -155,7 +167,9 @@ class GitBranchServiceImplTest {
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
 
-        val result = gitBranchService.getCurrentBranch(anActionEventMock)
+        val result = runBlocking {
+            gitBranchService.getCurrentBranch(anActionEventMock)
+        }
         assertEquals(gitBranchMock, result)
     }
 }
