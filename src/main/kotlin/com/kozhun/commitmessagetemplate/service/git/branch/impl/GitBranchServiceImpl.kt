@@ -29,11 +29,11 @@ class GitBranchServiceImpl(
         return anActionEvent.getData(VcsDataKeys.SELECTED_CHANGES)
             ?.firstOrNull()
             ?.virtualFile
-            ?.let { getRepoForFile(gitRepositoryManager, it) }
+            ?.let { getRepository(gitRepositoryManager, it) }
             ?.currentBranch
     }
 
-    private suspend fun getRepoForFile(gitRepositoryManager: GitRepositoryManager, file: VirtualFile): GitRepository {
+    private suspend fun getRepository(gitRepositoryManager: GitRepositoryManager, file: VirtualFile): GitRepository {
         val repository = withContext(Dispatchers.Default) {
             gitRepositoryManager.getRepositoryForFile(file)
         }
