@@ -17,7 +17,7 @@ class FilePathScopeReplacer(
     private val project: Project
 ) : Replacer {
 
-    override fun replace(message: String, anActionEvent: AnActionEvent): String {
+    override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
         val scope = extractScope()
         return message.replace(ANCHOR, scope)
     }

@@ -21,12 +21,12 @@ import com.kozhun.commitmessagetemplate.util.toNotBlankRegex
 class BranchTypeReplacer(
     private val project: Project
 ) : Replacer {
-    override fun replace(message: String, anActionEvent: AnActionEvent): String {
+    override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
         return changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
             .let { message.replace(ANCHOR, it) }
     }
 
-    private fun getTypeFromCurrentBranch(anActionEvent: AnActionEvent): String {
+    private suspend fun getTypeFromCurrentBranch(anActionEvent: AnActionEvent): String {
         return project.branches().getCurrentBranch(anActionEvent).name
             .let { getTypeRegex().find(it)?.value }
             ?: getDefaultTypeValue()

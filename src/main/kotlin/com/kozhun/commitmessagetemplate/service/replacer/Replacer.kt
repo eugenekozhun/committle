@@ -13,5 +13,5 @@ fun interface Replacer {
      * @param message The message to be processed.
      * @return The modified message with replaced characters.
      */
-    fun replace(message: String, anActionEvent: AnActionEvent): String
+    suspend fun replace(message: String, anActionEvent: AnActionEvent): String
 }

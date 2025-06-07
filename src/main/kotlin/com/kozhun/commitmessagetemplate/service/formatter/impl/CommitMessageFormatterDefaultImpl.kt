@@ -24,7 +24,7 @@ class CommitMessageFormatterDefaultImpl(
 
     private val whitespaceService = WhitespaceServiceDefaultImpl.getInstance(project)
 
-    override fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
+    override suspend fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
         val pattern = project.storage().state.pattern.orEmpty()
         return replacers.fold(pattern) { result, replacer -> replacer.replace(result, anActionEvent) }
             .let { whitespaceService.format(it) }

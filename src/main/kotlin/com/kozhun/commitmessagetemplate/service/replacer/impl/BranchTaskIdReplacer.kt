@@ -28,11 +28,11 @@ class BranchTaskIdReplacer(
      * @param message the original message that may contain TASK_ID_ANCHOR.
      * @return the message with TASK_ID_ANCHOR replaced by the task ID from the current branch.
      */
-    override fun replace(message: String, anActionEvent: AnActionEvent): String {
+    override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
         return message.replace(ANCHOR, getTaskIdFromCurrentBranch(anActionEvent))
     }
 
-    private fun getTaskIdFromCurrentBranch(anActionEvent: AnActionEvent): String {
+    private suspend fun getTaskIdFromCurrentBranch(anActionEvent: AnActionEvent): String {
         return project.branches().getCurrentBranch(anActionEvent).name
             .let { getTaskIdRegex().find(it)?.value }
             ?.let { changeCase(it) }

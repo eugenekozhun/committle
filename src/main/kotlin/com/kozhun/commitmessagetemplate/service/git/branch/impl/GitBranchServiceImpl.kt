@@ -1,7 +1,6 @@
 package com.kozhun.commitmessagetemplate.service.git.branch.impl
 
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -12,20 +11,21 @@ import git4idea.GitBranch
 import git4idea.GitLocalBranch
 import git4idea.repo.GitRepository
 import git4idea.repo.GitRepositoryManager
-import java.util.concurrent.Callable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Service(Service.Level.PROJECT)
 class GitBranchServiceImpl(
     private val project: Project
 ) : GitBranchService {
 
-    override fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch {
+    override suspend fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch {
         val gitRepositoryManager = GitRepositoryManager.getInstance(project)
 
         return getCurrentBranchForSelectedChange(anActionEvent, gitRepositoryManager) ?: getCurrentBranchFromFirstRepo(gitRepositoryManager)
     }
 
-    private fun getCurrentBranchForSelectedChange(anActionEvent: AnActionEvent, gitRepositoryManager: GitRepositoryManager): GitLocalBranch? {
+    private suspend fun getCurrentBranchForSelectedChange(anActionEvent: AnActionEvent, gitRepositoryManager: GitRepositoryManager): GitLocalBranch? {
         return anActionEvent.getData(VcsDataKeys.SELECTED_CHANGES)
             ?.firstOrNull()
             ?.virtualFile
@@ -33,13 +33,9 @@ class GitBranchServiceImpl(
             ?.currentBranch
     }
 
-    private fun getRepoForFile(gitRepositoryManager: GitRepositoryManager, it: VirtualFile): GitRepository {
-        val repository = if (ApplicationManager.getApplication().isDispatchThread) {
-            ApplicationManager.getApplication().executeOnPooledThread(Callable {
-                gitRepositoryManager.getRepositoryForFile(it)
-            }).get()
-        } else {
-            gitRepositoryManager.getRepositoryForFile(it)
+    private suspend fun getRepoForFile(gitRepositoryManager: GitRepositoryManager, file: VirtualFile): GitRepository {
+        val repository = withContext(Dispatchers.Default) {
+            gitRepositoryManager.getRepositoryForFile(file)
         }
 
         return repository ?: error("Git repository not found for the selected file.")

@@ -13,5 +13,5 @@ fun interface GitBranchService {
      *
      * @return the current Git branch
      */
-    fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch
+    suspend fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch
 }

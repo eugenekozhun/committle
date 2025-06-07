@@ -4,5 +4,5 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 
 fun interface CommitMessageFormatter {
 
-    fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String
+    suspend fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String
 }
