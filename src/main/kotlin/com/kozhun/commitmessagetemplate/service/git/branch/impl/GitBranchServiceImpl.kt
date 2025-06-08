@@ -15,25 +15,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Service(Service.Level.PROJECT)
-class GitBranchServiceImpl(
-    private val project: Project
-) : GitBranchService {
+class GitBranchServiceImpl(project: Project) : GitBranchService {
+    private val gitRepositoryManager = GitRepositoryManager.getInstance(project)
 
     override suspend fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch {
-        val gitRepositoryManager = GitRepositoryManager.getInstance(project)
-
-        return getCurrentBranchForSelectedChange(anActionEvent, gitRepositoryManager) ?: getCurrentBranchFromFirstRepo(gitRepositoryManager)
+        return getCurrentBranchForSelectedChange(anActionEvent) ?: getCurrentBranchFromFirstRepo()
     }
 
-    private suspend fun getCurrentBranchForSelectedChange(anActionEvent: AnActionEvent, gitRepositoryManager: GitRepositoryManager): GitLocalBranch? {
+    private suspend fun getCurrentBranchForSelectedChange(anActionEvent: AnActionEvent): GitLocalBranch? {
         return anActionEvent.getData(VcsDataKeys.SELECTED_CHANGES)
             ?.firstOrNull()
             ?.virtualFile
-            ?.let { getRepository(gitRepositoryManager, it) }
+            ?.let { getRepository(it) }
             ?.currentBranch
     }
 
-    private suspend fun getRepository(gitRepositoryManager: GitRepositoryManager, file: VirtualFile): GitRepository {
+    private suspend fun getRepository(file: VirtualFile): GitRepository {
         val repository = withContext(Dispatchers.Default) {
             gitRepositoryManager.getRepositoryForFile(file)
         }
@@ -41,7 +38,7 @@ class GitBranchServiceImpl(
         return repository ?: error("Git repository not found for the selected file.")
     }
 
-    private fun getCurrentBranchFromFirstRepo(gitRepositoryManager: GitRepositoryManager): GitLocalBranch {
+    private fun getCurrentBranchFromFirstRepo(): GitLocalBranch {
         return gitRepositoryManager.repositories.firstOrNull()
             ?.currentBranch
             ?: error("Current git branch not found.")

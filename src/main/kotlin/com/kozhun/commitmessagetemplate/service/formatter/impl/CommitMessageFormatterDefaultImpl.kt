@@ -9,13 +9,13 @@ import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTaskIdReplac
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTypeReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.FilePathScopeReplacer
 import com.kozhun.commitmessagetemplate.service.whitespace.impl.WhitespaceServiceDefaultImpl
-import com.kozhun.commitmessagetemplate.util.storage
+import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 
 @Service(Service.Level.PROJECT)
 class CommitMessageFormatterDefaultImpl(
-    private val project: Project
+    project: Project
 ) : CommitMessageFormatter {
-
+    private val projectStorage = SettingsStorage.getInstance(project)
     private val replacers = listOf(
         BranchTypeReplacer.getInstance(project),
         BranchTaskIdReplacer.getInstance(project),
@@ -25,7 +25,7 @@ class CommitMessageFormatterDefaultImpl(
     private val whitespaceService = WhitespaceServiceDefaultImpl.getInstance(project)
 
     override suspend fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
-        val pattern = project.storage().state.pattern.orEmpty()
+        val pattern = projectStorage.state.pattern.orEmpty()
         return replacers.fold(pattern) { result, replacer -> replacer.replace(result, anActionEvent) }
             .let { whitespaceService.format(it) }
     }

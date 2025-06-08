@@ -8,22 +8,23 @@ import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SEPARATOR
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.replacer.Replacer
-import com.kozhun.commitmessagetemplate.util.storage
+import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.util.toCase
 import com.kozhun.commitmessagetemplate.util.toNotBlankRegex
 
 @Service(Service.Level.PROJECT)
 class FilePathScopeReplacer(
-    private val project: Project
+    project: Project
 ) : Replacer {
+    private val changeListManager = ChangeListManager.getInstance(project)
+    private val settingsStorage = SettingsStorage.getInstance(project)
 
     override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        val scope = extractScope()
-        return message.replace(ANCHOR, scope)
+        return message.replace(ANCHOR, extractScope())
     }
 
     private fun extractScope(): String {
-        return ChangeListManager.getInstance(project)
+        return changeListManager
             .affectedPaths
             .asSequence()
             .mapNotNull { it.path }
@@ -41,27 +42,27 @@ class FilePathScopeReplacer(
     }
 
     private fun changeCase(value: String): String {
-        return project.storage().state.scopePostprocessor
+        return settingsStorage.state.scopePostprocessor
             ?.let { StringCase.labelValueOf(it) }
             ?.let { value.toCase(it) }
             ?: value
     }
 
     private fun getSeparator(): String {
-        return project.storage().state.scopeSeparator
+        return settingsStorage.state.scopeSeparator
             ?.takeIf { it.isNotBlank() }
             ?: DEFAULT_SCOPE_SEPARATOR
     }
 
     private fun getRegex(): Regex? {
-        return project.storage().state.scopeRegex?.toNotBlankRegex()
+        return settingsStorage.state.scopeRegex?.toNotBlankRegex()
     }
 
     private fun String?.orDefaultScope(): String {
         if (!this.isNullOrEmpty()) {
             return this
         }
-        return project.storage().state.scopeDefault.orEmpty()
+        return settingsStorage.state.scopeDefault.orEmpty()
     }
 
     companion object {

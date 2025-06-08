@@ -24,14 +24,13 @@ import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SE
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TASK_ID_REGEX
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TYPE_REGEX
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.settings.SettingsExporter
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.ui.components.PatternEditorBuilder
 import com.kozhun.commitmessagetemplate.ui.model.SynonymColumnInfo
 import com.kozhun.commitmessagetemplate.ui.model.SynonymPair
 import com.kozhun.commitmessagetemplate.ui.util.bindNullableText
 import com.kozhun.commitmessagetemplate.ui.util.showCommittleNotification
-import com.kozhun.commitmessagetemplate.util.settingExporter
-import com.kozhun.commitmessagetemplate.util.storage
 import java.util.ResourceBundle
 import javax.swing.JComponent
 import javax.swing.ListSelectionModel
@@ -40,7 +39,9 @@ import javax.swing.ListSelectionModel
 class CMTSettingsPage(
     private val project: Project
 ) : ConfigurableWithId {
-    private lateinit var settingsStorage: SettingsStorage
+    private val settingsStorage = SettingsStorage.getInstance(project)
+    private val settingsExporter = SettingsExporter.getInstance(project)
+
     private lateinit var patternEditor: Editor
     private lateinit var panel: DialogPanel
 
@@ -49,7 +50,6 @@ class CMTSettingsPage(
 
     @Suppress("LongMethod")
     override fun createComponent(): JComponent {
-        settingsStorage = project.storage()
         patternEditor = PatternEditorBuilder.buildEditor(project)
 
         tableModel = ListTableModel(
@@ -69,7 +69,7 @@ class CMTSettingsPage(
         panel = panel {
             row {
                 button("Import Settings") {
-                    val importState = project.settingExporter().import() ?: return@button
+                    val importState = settingsExporter.import() ?: return@button
 
                     settingsStorage.loadState(importState)
 
@@ -77,7 +77,7 @@ class CMTSettingsPage(
                     project.showCommittleNotification("Commit Template settings imported successfully", NotificationType.INFORMATION)
                 }
                 button("Export Settings") {
-                    project.settingExporter().export()
+                    settingsExporter.export()
                 }.align(AlignX.RIGHT)
             }.bottomGap(BottomGap.NONE)
             row {
