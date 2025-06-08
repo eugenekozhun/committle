@@ -28,11 +28,6 @@ class GitBranchServiceImplTest {
 
     private lateinit var gitBranchService: GitBranchServiceImpl
 
-    @BeforeEach
-    fun setUp() {
-        gitBranchService = GitBranchServiceImpl(projectMock)
-    }
-
     @AfterEach
     fun tearDown() {
         unmockkAll()
@@ -51,6 +46,8 @@ class GitBranchServiceImplTest {
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
 
+        gitBranchService = GitBranchServiceImpl(projectMock)
+
         val result = runBlocking {
             gitBranchService.getCurrentBranch(anActionEventMock)
         }
@@ -67,6 +64,8 @@ class GitBranchServiceImplTest {
             every { repositories } returns emptyList()
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
+
+        gitBranchService = GitBranchServiceImpl(projectMock)
 
         val exception = assertThrows<IllegalStateException> {
             runBlocking {
@@ -98,6 +97,8 @@ class GitBranchServiceImplTest {
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
         every { anActionEventMock.getData(VcsDataKeys.SELECTED_CHANGES) } returns arrayOf(changeMock)
 
+        gitBranchService = GitBranchServiceImpl(projectMock)
+
         val result = runBlocking {
             gitBranchService.getCurrentBranch(anActionEventMock)
         }
@@ -124,6 +125,8 @@ class GitBranchServiceImplTest {
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
         every { anActionEventMock.getData(VcsDataKeys.SELECTED_CHANGES) } returns arrayOf(changeMock)
 
+        gitBranchService = GitBranchServiceImpl(projectMock)
+
         val exception = assertThrows<IllegalStateException> {
             runBlocking {
                 gitBranchService.getCurrentBranch(anActionEventMock)
@@ -144,6 +147,8 @@ class GitBranchServiceImplTest {
             every { repositories } returns listOf(repoMock)
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
+
+        gitBranchService = GitBranchServiceImpl(projectMock)
 
         val result = runBlocking {
             gitBranchService.getCurrentBranch(anActionEventMock)
@@ -166,6 +171,8 @@ class GitBranchServiceImplTest {
             every { repositories } returns listOf(repoMock)
         }
         every { GitRepositoryManager.getInstance(projectMock) } returns repoManagerMock
+
+        gitBranchService = GitBranchServiceImpl(projectMock)
 
         val result = runBlocking {
             gitBranchService.getCurrentBranch(anActionEventMock)
