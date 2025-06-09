@@ -54,6 +54,11 @@
         ]]></description>
 
     <change-notes><![CDATA[
+        <h3>2.1.0</h3>
+        <ul>
+            <li>Add git submodules support.</li>
+            <li>Updated internal libraries.</li>
+        </ul>
         <h3>2.0.0</h3>
         <ul>
             <li>Renamed the plugin to <strong>Committle</strong> to better reflect its purpose and functionality.</li>
