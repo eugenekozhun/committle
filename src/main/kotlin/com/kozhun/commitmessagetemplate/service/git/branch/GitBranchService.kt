@@ -1,5 +1,6 @@
 package com.kozhun.commitmessagetemplate.service.git.branch
 
+import com.intellij.openapi.actionSystem.AnActionEvent
 import git4idea.GitBranch
 
 /**
@@ -12,5 +13,5 @@ fun interface GitBranchService {
      *
      * @return the current Git branch
      */
-    fun getCurrentBranch(): GitBranch
+    suspend fun getCurrentBranch(anActionEvent: AnActionEvent): GitBranch
 }

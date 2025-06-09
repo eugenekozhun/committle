@@ -4,15 +4,17 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.service.whitespace.WhitespaceService
-import com.kozhun.commitmessagetemplate.util.storage
+import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 
 @Service(Service.Level.PROJECT)
 class WhitespaceServiceDefaultImpl(
-    private val project: Project
+    project: Project
 ) : WhitespaceService {
+    private val projectStorage = SettingsStorage.getInstance(project)
+
     override fun format(string: String): String {
         var formattedString = string
-        val storageState = project.storage().state
+        val storageState = projectStorage.state
 
         if (storageState.unnecessaryWhitespaces) {
             formattedString = string.replace("\\s+".toRegex(), " ")

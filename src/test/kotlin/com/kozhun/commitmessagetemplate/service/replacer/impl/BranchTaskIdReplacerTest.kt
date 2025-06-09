@@ -1,31 +1,33 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
-import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class BranchTaskIdReplacerTest : BaseReplacerTest() {
-    private lateinit var replacer: BranchTaskIdReplacer
-
-    @BeforeEach
-    fun setUp() {
-        projectMock = mockk()
-        replacer = BranchTaskIdReplacer(projectMock)
-    }
 
     @Test
     fun `replace empty template with default regex`() {
         mockSettingState()
         mockBranchName(BRANCH_WITHOUT_TASK_ID)
-        assertEquals("", replacer.replace(""))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("", runBlocking {
+            replacer.replace("", anActionEventMock)
+        })
     }
 
     @Test
     fun `replace empty template with custom regex`() {
         mockSettingState(taskIdRegex = CUSTOM_TASK_ID_REGEX)
         mockBranchName(BRANCH_WITHOUT_TASK_ID)
-        assertEquals("", replacer.replace(""))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("", runBlocking {
+            replacer.replace("", anActionEventMock)
+        })
     }
 
     @Test
@@ -33,7 +35,12 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val template = "Some changes"
         mockSettingState()
         mockBranchName(BRANCH_WITHOUT_TASK_ID)
-        assertEquals(template, replacer.replace(template))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals(template, runBlocking {
+            replacer.replace(template, anActionEventMock)
+        })
     }
 
     @Test
@@ -41,42 +48,72 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val template = "Some changes"
         mockSettingState(taskIdRegex = CUSTOM_TASK_ID_REGEX)
         mockBranchName(BRANCH_WITH_TASK_ID)
-        assertEquals(template, replacer.replace(template))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals(template, runBlocking {
+            replacer.replace(template, anActionEventMock)
+        })
     }
 
     @Test
     fun `replace with mismatched task-id`() {
         mockSettingState()
         mockBranchName(BRANCH_WITHOUT_TASK_ID)
-        assertEquals("[]: Some changes", replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes"))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("[]: Some changes", runBlocking {
+            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+        })
     }
 
     @Test
     fun `replace with custom default when task-id mismatched`() {
         mockSettingState(taskIdDefault = "CMT-000")
         mockBranchName(BRANCH_WITHOUT_TASK_ID)
-        assertEquals("[CMT-000]: Some changes", replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes"))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("[CMT-000]: Some changes", runBlocking {
+            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+        })
     }
 
     @Test
     fun `replace with task-id in branch`() {
         mockSettingState()
         mockBranchName(BRANCH_WITH_TASK_ID)
-        assertEquals("[$TASK_ID]: Some changes", replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes"))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("[$TASK_ID]: Some changes", runBlocking {
+            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+        })
     }
 
     @Test
     fun `replace with custom mismatched task-id in branch`() {
         mockSettingState(taskIdRegex = CUSTOM_TASK_ID_REGEX)
         mockBranchName(BRANCH_WITH_TASK_ID)
-        assertEquals("[]: Some changes", replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes"))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("[]: Some changes", runBlocking {
+            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+        })
     }
 
     @Test
     fun `replace with custom task-id in branch`() {
         mockSettingState(taskIdRegex = CUSTOM_TASK_ID_REGEX)
         mockBranchName(BRANCH_WITH_CUSTOM_TASK_ID)
-        assertEquals("[$CUSTOM_TASK_ID]: Some changes", replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes"))
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        assertEquals("[$CUSTOM_TASK_ID]: Some changes", runBlocking {
+            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+        })
     }
 
     private companion object {
