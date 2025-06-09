@@ -54,7 +54,7 @@ $TYPE ($SCOPE): Commit message
 
 Description of changes
 
-Closes $TASK-ID
+Closes $TASK_ID
 ```
 
 ## 🐞 Bug Reporting
@@ -68,4 +68,4 @@ If you find this project helpful, consider [buying me a coffee](https://ko-fi.co
 your support helps me keep going!
 
 --- 
-© 2025 Eugene Kozhun
+© 2023 Eugene Kozhun
