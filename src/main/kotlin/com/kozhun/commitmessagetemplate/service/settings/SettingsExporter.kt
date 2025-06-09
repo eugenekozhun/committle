@@ -5,9 +5,9 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.storage.SettingsState
+import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.storage.toExportableSettings
 import com.kozhun.commitmessagetemplate.ui.util.showCommittleNotification
-import com.kozhun.commitmessagetemplate.util.storage
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -19,6 +19,8 @@ import java.io.FilenameFilter
 class SettingsExporter(
     private val project: Project
 ) {
+    private val settingsStorage = SettingsStorage.getInstance(project)
+
     init {
         if (System.getProperty("os.name").contains("Mac", ignoreCase = true)) {
             System.setProperty("apple.awt.fileDialogForDirectories", "false")
@@ -32,7 +34,7 @@ class SettingsExporter(
         }
 
         val selectedFile = fileDialog.files.firstOrNull() ?: return
-        val exportableSettings = project.storage().state.toExportableSettings()
+        val exportableSettings = settingsStorage.state.toExportableSettings()
 
         try {
             val json = Json.encodeToString(exportableSettings)

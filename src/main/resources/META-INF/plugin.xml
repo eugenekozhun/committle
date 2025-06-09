@@ -14,7 +14,8 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-        <p>This plugin makes it easy to write consistent and clear commit messages that align with your project's conventions.</p>
+        <p>This plugin makes it easy to write consistent and clear commit messages that align with your project's
+            conventions.</p>
 
         <h3 style="margin-bottom: 0">✨ Key Features</h3>
         <ul>
@@ -35,8 +36,15 @@
             <li>Edit dynamically populated values and commit!</li>
         </ul>
 
-        <h3>🌟 Why Choose This Plugin?</h3>
-        <p>Save time and maintain consistency across your team with an easy-to-use, customizable tool.</p>
+        <h3>🐞 Bug Reporting</h3>
+        <p>
+            Found a bug or have an idea for improvement? Feel free to <a href="https://github.com/EugeneKozhun/commit-message-template/issues">create an issue on GitHub</a>.
+        </p>
+
+        <h3>💛 Support My Work</h3>
+        <p>
+            If you find this plugin helpful, you can <a href="https://ko-fi.com/eugenekozhun">buy me a coffee</a> to support its development.
+        </p>
 
         <h3>🔗 Links</h3>
         <p>
