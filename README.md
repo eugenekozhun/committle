@@ -54,7 +54,7 @@ $TYPE ($SCOPE): Commit message
 
 Description of changes
 
-Closes $TASK-ID
+Closes $TASK_ID
 ```
 
 ## 🐞 Bug Reporting
