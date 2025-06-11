@@ -57,6 +57,10 @@ Description of changes
 Closes $TASK_ID
 ```
 
+## 🛠 Development
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for commit guidelines and build instructions.
+
 ## 🐞 Bug Reporting
 
 Found a bug? Have an idea for improvement? Feel free to create an issue in the
