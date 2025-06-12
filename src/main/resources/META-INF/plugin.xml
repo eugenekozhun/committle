@@ -23,6 +23,7 @@
             <li>Create and use a <strong>default commit message template</strong>.</li>
             <li>Customize <strong>dynamic variables</strong>, such as task ID, scope, and type.</li>
             <li>Set <strong>default values</strong> for your variables.</li>
+            <li>Benefit from <strong>variable autocompletion</strong> in the template editor.</li>
             <li>Control <strong>caret position</strong> for quick message edits.</li>
             <li>Maintain consistent formatting with <strong>whitespace rules</strong>.</li>
             <li>Apply your template instantly with a <strong>shortcut</strong>.</li>
@@ -166,6 +167,7 @@
         <lang.syntaxHighlighterFactory
                 language="CMT"
                 implementationClass="com.kozhun.commitmessagetemplate.language.highlighter.CMTSyntaxHighlighterFactory"/>
+        <completion.contributor language="CMT" implementationClass="com.kozhun.commitmessagetemplate.language.completion.CMTCompletionContributor"/>
         <postStartupActivity implementation="com.kozhun.commitmessagetemplate.listener.SettingsMigrator"/>
         <notificationGroup id="Committle Notifications"
                            displayType="BALLOON"

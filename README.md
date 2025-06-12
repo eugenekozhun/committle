@@ -27,6 +27,7 @@ _Compatible with [Conventional Commits](https://www.conventionalcommits.org/)_
     - Scope (e.g., feature area)
     - Type (feat, fix, etc.)
     - Default values for variables
+    - Autocompletion for variables in the template editor
 - Whitespace and caret formatting: Fine-tune alignment and position.
 - Shortcut for applying the template: Fast and efficient workflow.
 
