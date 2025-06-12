@@ -5,11 +5,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.service.caret.CaretService
 
-/**
- * Default implementation of the CaretService interface.
- *
- * This class provides functionality to obtain the caret offset by anchor in a given message.
- */
 @Service(Service.Level.PROJECT)
 class CaretServiceDefaultImpl : CaretService {
 

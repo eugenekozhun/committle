@@ -18,12 +18,6 @@ object PatternEditorBuilder {
     private const val VIRTUAL_FILE_NAME = "settings-pattern.cmt"
     private const val TEXT_AREA_HEIGHT = 125
 
-    /**
-     * Creates an instance of Editor for a pattern.
-     *
-     * @param project the project in which the editor will be created
-     * @return the created editor
-     */
     fun buildEditor(project: Project): Editor {
         val document = createDocument()
         val editorFactory = EditorFactory.getInstance()
@@ -48,11 +42,6 @@ object PatternEditorBuilder {
         return editor
     }
 
-    /**
-     * Releases the given pattern editor.
-     *
-     * @param patternEditor the pattern editor to be released
-     */
     fun dispose(patternEditor: Editor) {
         EditorFactory.getInstance().releaseEditor(patternEditor)
     }
