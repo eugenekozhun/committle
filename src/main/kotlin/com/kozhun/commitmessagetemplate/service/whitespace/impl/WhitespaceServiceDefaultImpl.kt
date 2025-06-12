@@ -17,15 +17,15 @@ class WhitespaceServiceDefaultImpl(
         val storageState = projectStorage.state
 
         if (storageState.unnecessaryWhitespaces) {
-            formattedString = string.replace("\\s+".toRegex(), " ")
+            formattedString = formattedString.replace("\\s+".toRegex(), " ")
         }
 
         if (storageState.trimWhitespacesStart) {
-            formattedString = string.trimStart()
+            formattedString = formattedString.trimStart()
         }
 
         if (storageState.trimWhitespacesEnd) {
-            formattedString = string.trimEnd()
+            formattedString = formattedString.trimEnd()
         }
 
         return formattedString

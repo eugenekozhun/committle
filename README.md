@@ -54,8 +54,12 @@ $TYPE ($SCOPE): Commit message
 
 Description of changes
 
-Closes $TASK-ID
+Closes $TASK_ID
 ```
+
+## 🛠 Development
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for commit guidelines and build instructions.
 
 ## 🐞 Bug Reporting
 
