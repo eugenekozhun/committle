@@ -19,12 +19,6 @@ class BranchTaskIdReplacer(
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val getBranchService = GitBranchServiceImpl.getInstance(project)
 
-    /**
-     * Replaces the occurrence of TASK_ID_ANCHOR in the given message with the task ID from the current branch.
-     *
-     * @param message the original message that may contain TASK_ID_ANCHOR.
-     * @return the message with TASK_ID_ANCHOR replaced by the task ID from the current branch.
-     */
     override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
         return message.replace(ANCHOR, getTaskIdFromCurrentBranch(anActionEvent))
     }
