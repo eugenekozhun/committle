@@ -1,10 +1,10 @@
 package com.kozhun.commitmessagetemplate.ui.components
 
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -12,17 +12,16 @@ import com.intellij.testFramework.LightVirtualFile
 import com.kozhun.commitmessagetemplate.language.CMTLanguage
 import java.awt.Dimension
 
-
 object PatternEditorBuilder {
     private const val DEFAULT_DOCUMENT_TEXT = ""
     private const val VIRTUAL_FILE_NAME = "settings-pattern.cmt"
     private const val TEXT_AREA_HEIGHT = 125
 
     fun buildEditor(project: Project): Editor {
-        val document = createDocument()
-        val editorFactory = EditorFactory.getInstance()
-        val editor = editorFactory.createEditor(document, project)
         val file = LightVirtualFile(VIRTUAL_FILE_NAME, CMTLanguage.INSTANCE, DEFAULT_DOCUMENT_TEXT)
+        val document = FileDocumentManager.getInstance().getDocument(file)!!
+        val editorFactory = EditorFactory.getInstance()
+        val editor = editorFactory.createEditor(document, project, file, false)
 
         editor.settings.apply {
             additionalLinesCount = 0
@@ -44,10 +43,6 @@ object PatternEditorBuilder {
 
     fun dispose(patternEditor: Editor) {
         EditorFactory.getInstance().releaseEditor(patternEditor)
-    }
-
-    private fun createDocument(): Document {
-        return EditorFactory.getInstance().createDocument(DEFAULT_DOCUMENT_TEXT)
     }
 }
 
