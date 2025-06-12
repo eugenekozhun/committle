@@ -6,96 +6,120 @@ import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.settings.ExportableSettings
 
 /**
- * Represents the state of the settings in the application.
+ * Represents the persistable state of the commit message template settings.
+ * Extends [BaseState] to provide automatic state persistence functionality.
  */
 class SettingsState : BaseState() {
     /**
-     * Represents a message pattern used in template.
+     * The template pattern used for generating commit messages.
      */
     var pattern by string()
 
     /**
-     * Remove whitespace at the start of string.
+     * Controls whether leading whitespace should be removed from the generated messоage.
      */
     var trimWhitespacesStart by property(false)
 
     /**
-     * Remove whitespace at the end of string.
+     * Controls whether trailing whitespace should be removed from the generated message.
      */
     var trimWhitespacesEnd by property(false)
 
     /**
-     * Remove duplicated whitespaces.
+     * Controls whether duplicate whitespace characters should be consolidated.
      */
     var unnecessaryWhitespaces by property(false)
 
     /**
-     * Represents a custom regular expression used for matching task ID from the current branch.
+     * Regular expression pattern used to extract task ID from the current branch name.
+     * When null or empty, the default pattern will be used.
      */
     var taskIdRegex by string()
 
     /**
-     * Represents a default value for task-id.
+     * Default value to use for task ID when no match is found in the branch name.
      */
     var taskIdDefault by string()
 
     /**
-     * Represents a string case postprocessor for a task id.
+     * String case transformation to apply to the extracted task ID.
+     * Default value is [StringCase.NONE].
      */
     var taskIdPostProcessor by string(StringCase.NONE.label)
 
     /**
-     * Represents a custom regular expression used for matching a current branch type.
+     * Regular expression pattern used to extract type from the current branch name.
+     * When null or empty, the default pattern will be used.
      */
     var typeRegex by string()
 
     /**
-     * Represents a default value for branch type.
+     * Default value to use for type when no match is found in the branch name.
      */
     var typeDefault by string()
 
     /**
-     * Represents a branch type synonyms.
+     * Map of type synonyms for normalizing branch types.
+     * Keys are the source values, values are the target replacements.
      */
     var typeSynonyms by map<String, String>()
 
     /**
-     * Represents a string case postprocessor for a branch type.
+     * String case transformation to apply to the extracted type.
+     * Default value is [StringCase.NONE].
      */
     var typePostprocessor by string(StringCase.NONE.label)
 
     /**
-     * Represents a custom regular expression used for matching Scope from the file path.
+     * Regular expression pattern used to extract scope from the file path.
+     * When null or empty, the default pattern will be used.
      */
     var scopeRegex by string()
 
     /**
-     * Default scope value.
+     * Default value to use for scope when no match is found in the file path.
      */
     var scopeDefault by string()
 
     /**
-     * Represents a scopes separator.
+     * Character or string used to separate multiple scope values.
+     * When null or empty, [DEFAULT_SCOPE_SEPARATOR] will be used.
      */
     var scopeSeparator by string()
 
     /**
-     * Represents a string case postprocessor for a scope.
+     * String case transformation to apply to the extracted scope.
+     * Default value is [StringCase.NONE].
      */
     var scopePostprocessor by string(StringCase.NONE.label)
 
+    /**
+     * Checks if task-related fields are in their default state.
+     *
+     * @return `true` if all task-related fields have default values, `false` otherwise.
+     */
     fun isDefaultTaskFields(): Boolean {
         return taskIdRegex.isNullOrEmpty() &&
                 taskIdDefault.isNullOrEmpty() &&
                 taskIdPostProcessor == StringCase.NONE.label
     }
 
+    /**
+     * Checks if type-related fields are in their default state.
+     *
+     * @return `true` if all type-related fields have default values, `false` otherwise.
+     */
     fun isDefaultTypeFields(): Boolean {
         return typeRegex.isNullOrEmpty() &&
                 typeDefault.isNullOrEmpty() &&
                 typePostprocessor == StringCase.NONE.label
     }
 
+    /**
+     * Checks if scope-related fields are in their default state.
+     *
+     * @return `true` if all scope-related fields have default values, `false` otherwise.
+     */
     fun isDefaultScopeFields(): Boolean {
         return scopeRegex.isNullOrEmpty() &&
                 scopeDefault.isNullOrEmpty() &&
@@ -104,22 +128,25 @@ class SettingsState : BaseState() {
     }
 }
 
+/**
+ * Converts the current [SettingsState] to [ExportableSettings].
+ * This is used when exporting settings to a portable format.
+ *
+ * @return An [ExportableSettings] instance containing the current settings.
+ */
 fun SettingsState.toExportableSettings(): ExportableSettings {
     return ExportableSettings(
         pattern = pattern.orEmpty(),
         trimWhitespacesStart = trimWhitespacesStart,
         trimWhitespacesEnd = trimWhitespacesEnd,
         unnecessaryWhitespaces = unnecessaryWhitespaces,
-
         taskIdRegex = taskIdRegex,
         taskIdDefault = taskIdDefault,
         taskIdPostProcessor = taskIdPostProcessor,
-
         typeRegex = typeRegex,
         typeDefault = typeDefault,
         typeSynonyms = typeSynonyms,
         typePostprocessor = typePostprocessor,
-
         scopeRegex = scopeRegex,
         scopeDefault = scopeDefault,
         scopeSeparator = scopeSeparator,
