@@ -30,13 +30,22 @@ _Compatible with [Conventional Commits](https://www.conventionalcommits.org/)_
 - Whitespace and caret formatting: Fine-tune alignment and position.
 - Shortcut for applying the template: Fast and efficient workflow.
 
+## 📦 Installation
+
+### From JetBrains Marketplace
+
+1. Open **Settings/Preferences → Plugins** in your JetBrains IDE.
+2. Search for **Committle** in the Marketplace tab.
+3. Click **Install** and restart the IDE.
+
 ## 💡 How to Use
 
-Using the plugin is straightforward and beginner-friendly:
+Follow these steps to insert a commit message from your template:
 
-1. When committing changes, press the button or use the shortcut to apply the template.
-2. Edit the generated message with relevant details.
-3. Commit your changes effortlessly.
+1. Set up your template in **Settings → Version Control → Commit Template**.
+2. Stage files and open the commit dialog.
+3. Click **Insert Pattern Message** or press **Ctrl+Shift+T** to apply the template.
+4. Edit the generated text if needed and complete the commit.
 
 ## ⚙️ Customization
 
@@ -47,7 +56,7 @@ Customize the plugin to your needs:
 3. Set whitespace rules.
 4. (Optional) Configure your own rules for the variables.
 
-### Template Example:
+### Basic Template Example
 
 ```
 $TYPE ($SCOPE): Commit message 
