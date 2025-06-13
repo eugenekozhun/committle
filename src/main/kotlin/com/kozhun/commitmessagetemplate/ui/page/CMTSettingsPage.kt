@@ -51,11 +51,12 @@ class CMTSettingsPage(
     @Suppress("LongMethod")
     override fun createComponent(): JComponent {
         patternEditor = PatternEditorBuilder.buildEditor(project)
+        val resourceBundle = ResourceBundle.getBundle("messages")
 
         tableModel = ListTableModel(
             arrayOf(
-                SynonymColumnInfo("Value") { it.key },
-                SynonymColumnInfo("Synonym") { it.value }
+                SynonymColumnInfo(resourceBundle.getString("settings.table.value")) { it.key },
+                SynonymColumnInfo(resourceBundle.getString("settings.table.synonym")) { it.value }
             ),
             getSynonymsMapFromStorage()
         )
@@ -64,19 +65,21 @@ class CMTSettingsPage(
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
         table.putClientProperty("terminateEditOnFocusLost", true)
 
-        val resourceBundle = ResourceBundle.getBundle("messages")
 
         panel = panel {
             row {
-                button("Import Settings") {
+                button(resourceBundle.getString("settings.import-settings")) {
                     val importState = settingsExporter.import() ?: return@button
 
                     settingsStorage.loadState(importState)
 
                     reset()
-                    project.showCommittleNotification("Commit Template settings imported successfully", NotificationType.INFORMATION)
+                    project.showCommittleNotification(
+                        resourceBundle.getString("settings.import.success"),
+                        NotificationType.INFORMATION
+                    )
                 }
-                button("Export Settings") {
+                button(resourceBundle.getString("settings.export-settings")) {
                     settingsExporter.export()
                 }.align(AlignX.RIGHT)
             }.bottomGap(BottomGap.NONE)
@@ -112,7 +115,7 @@ class CMTSettingsPage(
                     row {
                         expandableTextField()
                             .label(resourceBundle.getString("settings.advanced.common.label"), LabelPosition.TOP)
-                            .comment(comment = "Default regex: $DEFAULT_TASK_ID_REGEX")
+                            .comment(comment = resourceBundle.getString("settings.advanced.task-id.regex.comment").format(DEFAULT_TASK_ID_REGEX))
                             .align(AlignX.FILL)
                             .resizableColumn()
                             .bindNullableText(
@@ -120,7 +123,7 @@ class CMTSettingsPage(
                                     { settingsStorage.state.taskIdRegex },
                                     { newValue -> runWriteAction { settingsStorage.state.taskIdRegex = newValue } })
                             )
-                        cell(ContextHelpLabel.create("Value extracted from current branch name")).align(AlignX.RIGHT)
+                        cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.current-branch"))).align(AlignX.RIGHT)
                     }
                     row {
                         textField()
@@ -147,7 +150,7 @@ class CMTSettingsPage(
                     row {
                         expandableTextField()
                             .label(resourceBundle.getString("settings.advanced.common.label"), LabelPosition.TOP)
-                            .comment(comment = "Default regex: $DEFAULT_TYPE_REGEX")
+                            .comment(comment = resourceBundle.getString("settings.advanced.type.regex.comment").format(DEFAULT_TYPE_REGEX))
                             .align(AlignX.FILL)
                             .resizableColumn()
                             .bindNullableText(
@@ -155,7 +158,7 @@ class CMTSettingsPage(
                                     { settingsStorage.state.typeRegex },
                                     { newValue -> runWriteAction { settingsStorage.state.typeRegex = newValue } })
                             )
-                        cell(ContextHelpLabel.create("Value extracted from current branch name")).align(AlignX.RIGHT)
+                        cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.current-branch"))).align(AlignX.RIGHT)
                     }
                     row {
                         textField()
@@ -194,13 +197,13 @@ class CMTSettingsPage(
                                     { settingsStorage.state.scopeRegex },
                                     { newValue -> runWriteAction { settingsStorage.state.scopeRegex = newValue } })
                             )
-                        cell(ContextHelpLabel.create("Value extracted from the modified file's path"))
+                        cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.file-path")))
                             .align(AlignX.RIGHT)
                     }
                     row {
                         textField()
                             .label(resourceBundle.getString("settings.advanced.scope.default-value"), LabelPosition.TOP)
-                            .comment("When the scope isn't defined.")
+                            .comment(resourceBundle.getString("settings.advanced.scope.default.comment"))
                             .align(AlignX.FILL)
                             .bindNullableText(
                                 MutableProperty(
@@ -209,7 +212,7 @@ class CMTSettingsPage(
                             )
                         textField()
                             .label(resourceBundle.getString("settings.advanced.common.separator"), LabelPosition.TOP)
-                            .comment(comment = "If there are multiple scopes.<br/>Default: $DEFAULT_SCOPE_SEPARATOR")
+                            .comment(comment = resourceBundle.getString("settings.advanced.scope.separator.comment").format(DEFAULT_SCOPE_SEPARATOR))
                             .align(AlignX.FILL)
                             .bindNullableText(
                                 MutableProperty(
@@ -266,7 +269,7 @@ class CMTSettingsPage(
     }
 
     override fun getDisplayName(): String {
-        return DISPLAY_NAME
+        return ResourceBundle.getBundle("messages").getString("settings.display-name")
     }
 
     override fun getId(): String {
@@ -274,7 +277,6 @@ class CMTSettingsPage(
     }
 
     companion object {
-        private const val DISPLAY_NAME = "Committle"
         private const val ID = "preferences.CommittleConfigurable"
     }
 
