@@ -86,7 +86,6 @@ class CMTSettingsPage(
             row {
                 cell(patternEditor.component)
                     .align(AlignX.FILL)
-                    .comment(comment = resourceBundle.getString("settings.message-pattern-notes"))
                     .bind(
                         { _ -> patternEditor.document.text.ifBlank { null } },
                         { _, value: String? -> runWriteAction { patternEditor.document.setText(value.orEmpty()) } },
@@ -109,6 +108,13 @@ class CMTSettingsPage(
                         { settingsStorage.state.unnecessaryWhitespaces },
                         { newValue -> settingsStorage.state.unnecessaryWhitespaces = newValue }
                     )
+                val patternHelp = listOf(
+                    resourceBundle.getString("settings.message-pattern-notes.task-id"),
+                    resourceBundle.getString("settings.message-pattern-notes.type"),
+                    resourceBundle.getString("settings.message-pattern-notes.scope"),
+                    resourceBundle.getString("settings.message-pattern-notes.caret-position")
+                ).joinToString(separator = "<br/>")
+                cell(ContextHelpLabel.create(patternHelp, "Help")).align(AlignX.RIGHT)
             }
             group(resourceBundle.getString("settings.variables-config"), false) {
                 collapsibleGroup(resourceBundle.getString("settings.advanced.task-id.title")) {
