@@ -10,7 +10,7 @@
     <a href="https://plugins.jetbrains.com/plugin/23100-commit-message-template"><img alt="plugin's rating" src="https://img.shields.io/jetbrains/plugin/r/stars/23100-commit-message-template?style=flat-square"/></a>
     <a href="https://github.com/EugeneKozhun/commit-message-template/actions/workflows/publish-workflow.yml"><img alt="deploy" src="https://img.shields.io/github/actions/workflow/status/EugeneKozhun/commit-message-template/publish-workflow.yml?label=deploy&style=flat-square&logo=github"/></a>
     <a href="https://github.com/EugeneKozhun/commit-message-template/blob/main/LICENSE.md"><img alt="plugin's license" src="https://img.shields.io/github/license/EugeneKozhun/commit-message-template?style=flat-square"/></a>
-    <a href="https://ko-fi.com/eugenekozhun"><img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Support%20me-Ko--fi-ff5f5f?style=flat-square&logo=ko-fi&logoColor=white"/></a>
+    <a href="https://boosty.to/eugenekozhun"><img alt="Boosty" src="https://img.shields.io/badge/Support%20me-Boosty-ff5f5f?style=flat-square&logo=boosty&logoColor=white"/></a>
 </p>
 
 ✨ **Committle** (ex. Commit Message Template)
@@ -78,7 +78,7 @@ repository: [GitHub Issues](https://github.com/EugeneKozhun/commit-message-templ
 
 ## ☕ Support My Work
 
-If you find this project helpful, consider [buying me a coffee](https://ko-fi.com/eugenekozhun) —
+If you find this project helpful, consider [buying me a coffee](https://boosty.to/eugenekozhun) —
 your support helps me keep going!
 
 --- 
