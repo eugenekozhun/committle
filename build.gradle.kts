@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val kotlinVersion = "2.1.21"
 val mockkVersion = "1.13.12"
 val junitVersion = "5.11.0"
 val kotlinxSerializationJson = "1.7.3"
