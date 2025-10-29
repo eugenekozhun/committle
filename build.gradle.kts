@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "com.kozhun"
-version = "2.2.0"
+version = "2.2.1"
 
 sourceSets["main"].java.srcDirs("src/main/gen")
 
@@ -58,7 +58,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("231")
-        untilBuild.set("252.*")
+        untilBuild.set("253.*")
     }
 
     signPlugin {
