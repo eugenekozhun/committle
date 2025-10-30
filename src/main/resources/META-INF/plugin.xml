@@ -55,6 +55,10 @@
         ]]></description>
 
     <change-notes><![CDATA[
+        <h3>2.3.0</h3>
+        <ul>
+            <li>Updated the <strong>$SCOPE</strong> variable to respect included changes selected in the commit dialog.</li>
+        </ul>
         <h3>2.2.0</h3>
         <ul>
             <li>Added autocomplete in the template editor.</li>

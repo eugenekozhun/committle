@@ -1,6 +1,10 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
+import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
+import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase
+import com.intellij.openapi.vcs.changes.ui.ChangesTree
+import com.intellij.openapi.vfs.VirtualFile
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import io.mockk.every
 import io.mockk.mockk
@@ -46,9 +50,11 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             scopePostprocessor = StringCase.CAPITALIZE
         )
         mockAffectedPaths(
-            "something/something/something/something/something.kt",
-            "test/test/test/test/test.kt",
-            "project/project/project/project/project.kt"
+            includedPaths = arrayOf(
+                "something/something/something/something/something.kt",
+                "test/test/test/test/test.kt",
+                "project/project/project/project/project.kt"
+            )
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
@@ -66,9 +72,11 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             scopeRegex = "project"
         )
         mockAffectedPaths(
-            "something/something/something/something/something.kt",
-            "test/test/test/test/test.kt",
-            "project/project/project/project/project.kt"
+            includedPaths = arrayOf(
+                "something/something/something/something/something.kt",
+                "test/test/test/test/test.kt",
+                "project/project/project/project/project.kt"
+            )
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
@@ -86,9 +94,11 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             scopeRegex = "project|test",
         )
         mockAffectedPaths(
-            "something/something/something/something/something.kt",
-            "test/test/test/test/test.kt",
-            "project/project/project/project/project.kt"
+            includedPaths = arrayOf(
+                "something/something/something/something/something.kt",
+                "test/test/test/test/test.kt",
+                "project/project/project/project/project.kt"
+            )
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
@@ -107,9 +117,11 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             scopeSeparator = ","
         )
         mockAffectedPaths(
-            "something/something/something/something/something.kt",
-            "test/test/test/test/test.kt",
-            "project/project/project/project/project.kt"
+            includedPaths = arrayOf(
+                "something/something/something/something/something.kt",
+                "test/test/test/test/test.kt",
+                "project/project/project/project/project.kt"
+            )
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
@@ -127,9 +139,11 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
             scopePostprocessor = StringCase.UPPERCASE
         )
         mockAffectedPaths(
-            "something/something/something/something/something.kt",
-            "test/test/test/test/test.kt",
-            "project/project/project/project/project.kt"
+            includedPaths = arrayOf(
+                "something/something/something/something/something.kt",
+                "test/test/test/test/test.kt",
+                "project/project/project/project/project.kt"
+            )
         )
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
@@ -140,14 +154,66 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         })
     }
 
-    private fun mockAffectedPaths(vararg paths: String) {
+    @Test
+    fun `should return scopes from all included changes`() {
+        mockSettingState(
+            scopeRegex = "project|test",
+        )
+        mockAffectedPaths(
+            includedPaths = arrayOf(
+                "project/project/project/project/project.kt",
+                "test/test/test/test/test.kt"
+            )
+        )
+        mockBranchName(BRANCH_WITHOUT_TYPE_ID)
+
+        val replacer = FilePathScopeReplacer(projectMock)
+
+        assertEquals("project|test: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
+    }
+
+    @Test
+    fun `should return scopes from changes when nothing is selected`() {
+        mockSettingState(
+            scopeRegex = "project|test",
+        )
+        mockAffectedPaths(
+            affectedPaths = arrayOf(
+                "project/project/project/project/project.kt",
+                "test/test/test/test/test.kt"
+            ),
+        )
+        mockBranchName(BRANCH_WITHOUT_TYPE_ID)
+
+        val replacer = FilePathScopeReplacer(projectMock)
+
+        assertEquals("project|test: default message", runBlocking {
+            replacer.replace("$ANCHOR: default message", anActionEventMock)
+        })
+    }
+
+    private fun mockAffectedPaths(
+        includedPaths: Array<String> = emptyArray(),
+        affectedPaths: Array<String> = emptyArray(),
+    ) {
         mockkStatic(ChangeListManager::class)
 
         val changeListManagerMock = mockk<ChangeListManager>()
-        val filePaths = paths.map { mockFile(it) }
+        val filePaths = affectedPaths.map { mockFile(it) }
 
         every { changeListManagerMock.affectedPaths } returns filePaths
         every { ChangeListManager.getInstance(projectMock) } returns changeListManagerMock
+
+        val includedChanges = mockIncludedChanges(includedPaths)
+
+        val changesBrowserMock = mockk<ChangesBrowserBase>(relaxed = true)
+        val changesTreeMock = mockk<ChangesTree>(relaxed = true)
+
+        every { changesBrowserMock.viewer } returns changesTreeMock
+        every { changesTreeMock.includedSet } returns includedChanges
+        every { anActionEventMock.getData(ChangesBrowserBase.DATA_KEY) } returns changesBrowserMock
     }
 
     private fun mockFile(path: String): File {
@@ -156,6 +222,24 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         every { fileMock.path } returns path
 
         return fileMock
+    }
+
+    private fun mockChanges(paths: Array<String>): Array<Change> {
+        return paths.map { path ->
+            val changeMock = mockk<Change>()
+            val virtualFileMock = mockk<VirtualFile>()
+
+            every { virtualFileMock.path } returns path
+            every { changeMock.virtualFile } returns virtualFileMock
+            every { changeMock.afterRevision } returns null
+            every { changeMock.beforeRevision } returns null
+
+            changeMock
+        }.toTypedArray()
+    }
+
+    private fun mockIncludedChanges(paths: Array<String>): MutableSet<Change> {
+        return mockChanges(paths).toMutableSet()
     }
 
     companion object {
