@@ -21,8 +21,10 @@ class FilePathScopeReplacer(
     private val changeListManager = ChangeListManager.getInstance(project)
     private val settingsStorage = SettingsStorage.getInstance(project)
 
+    override val anchor = "\$SCOPE"
+
     override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        return message.replace(ANCHOR, extractScope(anActionEvent))
+        return message.replace(anchor, extractScope(anActionEvent))
     }
 
     private fun extractScope(anActionEvent: AnActionEvent): String {
@@ -91,8 +93,6 @@ class FilePathScopeReplacer(
     }
 
     companion object {
-        private const val ANCHOR = "\$SCOPE"
-
         @JvmStatic
         fun getInstance(project: Project): Replacer = project.service<FilePathScopeReplacer>()
     }

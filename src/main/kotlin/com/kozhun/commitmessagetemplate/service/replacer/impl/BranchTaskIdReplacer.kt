@@ -19,8 +19,10 @@ class BranchTaskIdReplacer(
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val getBranchService = GitBranchServiceImpl.getInstance(project)
 
+    override val anchor = "\$TASK_ID"
+
     override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        return message.replace(ANCHOR, getTaskIdFromCurrentBranch(anActionEvent))
+        return message.replace(anchor, getTaskIdFromCurrentBranch(anActionEvent))
     }
 
     private suspend fun getTaskIdFromCurrentBranch(anActionEvent: AnActionEvent): String {
@@ -46,8 +48,6 @@ class BranchTaskIdReplacer(
     }
 
     companion object {
-        const val ANCHOR = "\$TASK_ID"
-
         @JvmStatic
         fun getInstance(project: Project): Replacer = project.service<BranchTaskIdReplacer>()
     }

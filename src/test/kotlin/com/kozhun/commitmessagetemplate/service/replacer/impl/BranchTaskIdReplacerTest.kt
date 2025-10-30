@@ -64,7 +64,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val replacer = BranchTaskIdReplacer(projectMock)
 
         assertEquals("[]: Some changes", runBlocking {
-            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
         })
     }
 
@@ -76,7 +76,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val replacer = BranchTaskIdReplacer(projectMock)
 
         assertEquals("[CMT-000]: Some changes", runBlocking {
-            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
         })
     }
 
@@ -88,7 +88,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val replacer = BranchTaskIdReplacer(projectMock)
 
         assertEquals("[$TASK_ID]: Some changes", runBlocking {
-            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
         })
     }
 
@@ -100,7 +100,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val replacer = BranchTaskIdReplacer(projectMock)
 
         assertEquals("[]: Some changes", runBlocking {
-            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
         })
     }
 
@@ -112,7 +112,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
         val replacer = BranchTaskIdReplacer(projectMock)
 
         assertEquals("[$CUSTOM_TASK_ID]: Some changes", runBlocking {
-            replacer.replace("[${BranchTaskIdReplacer.ANCHOR}]: Some changes", anActionEventMock)
+            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
         })
     }
 
