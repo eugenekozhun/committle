@@ -4,7 +4,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
+import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SEPARATOR
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.replacer.Replacer
@@ -20,14 +22,11 @@ class FilePathScopeReplacer(
     private val settingsStorage = SettingsStorage.getInstance(project)
 
     override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        return message.replace(ANCHOR, extractScope())
+        return message.replace(ANCHOR, extractScope(anActionEvent))
     }
 
-    private fun extractScope(): String {
-        return changeListManager
-            .affectedPaths
-            .asSequence()
-            .mapNotNull { it.path }
+    private fun extractScope(anActionEvent: AnActionEvent): String {
+        return getAffectedPaths(anActionEvent)
             .map { getPathScope(it) }
             .filter { !it.isNullOrEmpty() }
             .distinct()
@@ -35,6 +34,32 @@ class FilePathScopeReplacer(
             .takeIf { it.isNotEmpty() }
             ?.let { changeCase(it) }
             .orDefaultScope()
+    }
+
+    private fun getAffectedPaths(anActionEvent: AnActionEvent): Sequence<String> {
+        return getSelectedChangePaths(anActionEvent)
+            .ifEmpty {
+                changeListManager
+                    .affectedPaths
+                    .asSequence()
+                    .mapNotNull { it.path }
+            }
+    }
+
+    private fun getSelectedChangePaths(anActionEvent: AnActionEvent): Sequence<String> {
+        return anActionEvent.getData(ChangesBrowserBase.DATA_KEY)
+            ?.viewer
+            ?.includedSet
+            ?.asSequence()
+            ?.mapNotNull { it as? Change }
+            ?.mapNotNull(::getChangePath)
+            ?: emptySequence()
+    }
+
+    private fun getChangePath(change: Change): String? {
+        return change.virtualFile?.path
+            ?: change.afterRevision?.file?.path
+            ?: change.beforeRevision?.file?.path
     }
 
     private fun getPathScope(it: String): String? {
