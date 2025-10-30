@@ -39,7 +39,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("cmt: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -61,7 +61,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("cmt: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -83,7 +83,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("project: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -105,7 +105,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("test|project: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -128,7 +128,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("test,project: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -150,7 +150,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("TEST|PROJECT: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -170,7 +170,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("project|test: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -190,7 +190,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         val replacer = FilePathScopeReplacer(projectMock)
 
         assertEquals("project|test: default message", runBlocking {
-            replacer.replace("$ANCHOR: default message", anActionEventMock)
+            replacer.replace("${replacer.anchor}: default message", anActionEventMock)
         })
     }
 
@@ -244,7 +244,5 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
     companion object {
         const val BRANCH_WITHOUT_TYPE_ID = "master"
-
-        private const val ANCHOR = "\$SCOPE"
     }
 }

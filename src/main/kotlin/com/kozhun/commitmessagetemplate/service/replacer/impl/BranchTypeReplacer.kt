@@ -19,9 +19,11 @@ class BranchTypeReplacer(
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val getBranchService = GitBranchServiceImpl.getInstance(project)
 
+    override val anchor = "\$TYPE"
+
     override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
         return changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
-            .let { message.replace(ANCHOR, it) }
+            .let { message.replace(anchor, it) }
     }
 
     private suspend fun getTypeFromCurrentBranch(anActionEvent: AnActionEvent): String {
@@ -50,8 +52,6 @@ class BranchTypeReplacer(
     }
 
     companion object {
-        const val ANCHOR = "\$TYPE"
-
         @JvmStatic
         fun getInstance(project: Project): Replacer = project.service<BranchTypeReplacer>()
     }
