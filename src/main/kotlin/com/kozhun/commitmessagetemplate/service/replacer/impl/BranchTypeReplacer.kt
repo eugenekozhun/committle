@@ -24,6 +24,7 @@ class BranchTypeReplacer(
 
     override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
         val type = changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
+
         return Replacement(type, type.isNotBlank())
     }
 

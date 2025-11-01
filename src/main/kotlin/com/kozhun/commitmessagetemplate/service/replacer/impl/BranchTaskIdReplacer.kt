@@ -24,6 +24,7 @@ class BranchTaskIdReplacer(
 
     override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
         val taskId = getTaskIdFromCurrentBranch(anActionEvent)
+
         return Replacement(taskId, taskId.isNotBlank())
     }
 

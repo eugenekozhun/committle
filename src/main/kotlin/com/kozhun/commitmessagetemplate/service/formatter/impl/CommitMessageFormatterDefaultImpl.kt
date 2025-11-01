@@ -29,6 +29,7 @@ class CommitMessageFormatterDefaultImpl(
         val pattern = projectStorage.state.pattern.orEmpty()
         val replacements = collectReplacements(pattern, anActionEvent)
         val replacedMessage = applyReplacements(pattern, replacements)
+
         return whitespaceService.format(replacedMessage)
     }
 

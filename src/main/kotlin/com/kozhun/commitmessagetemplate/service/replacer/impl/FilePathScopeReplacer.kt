@@ -26,6 +26,7 @@ class FilePathScopeReplacer(
 
     override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
         val scope = extractScope(anActionEvent)
+
         return Replacement(scope, scope.isNotBlank())
     }
 
