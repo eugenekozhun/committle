@@ -5,5 +5,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 interface Replacer {
     val anchor: String
 
-    suspend fun replace(message: String, anActionEvent: AnActionEvent): String
+    suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement
 }
+
+data class Replacement(
+    val value: String,
+    val hasValue: Boolean,
+)

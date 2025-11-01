@@ -13,9 +13,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("", runBlocking {
-            replacer.replace("", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -25,9 +26,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("", runBlocking {
-            replacer.replace("", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -37,9 +39,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("Some changes", runBlocking {
-            replacer.replace("Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -49,9 +52,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
 
@@ -62,9 +66,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[$TYPE_DEFAULT]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals(TYPE_DEFAULT, replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -74,9 +79,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[${TYPE}]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals(TYPE, replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
 
@@ -87,9 +93,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -99,9 +106,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[${CUSTOM_TYPE}]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals(CUSTOM_TYPE, replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -111,9 +119,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[feature]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("feature", replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -123,9 +132,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[FEATURE]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("FEATURE", replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -135,9 +145,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[Feature]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("Feature", replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -147,9 +158,10 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        assertEquals("[${TYPE}]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals(TYPE, replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     private companion object {

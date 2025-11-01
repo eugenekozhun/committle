@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TASK_ID_REGEX
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.git.branch.impl.GitBranchServiceImpl
+import com.kozhun.commitmessagetemplate.service.replacer.Replacement
 import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.util.toCase
@@ -21,8 +22,10 @@ class BranchTaskIdReplacer(
 
     override val anchor = "\$TASK_ID"
 
-    override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        return message.replace(anchor, getTaskIdFromCurrentBranch(anActionEvent))
+    override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
+        val taskId = getTaskIdFromCurrentBranch(anActionEvent)
+
+        return Replacement(taskId, taskId.isNotBlank())
     }
 
     private suspend fun getTaskIdFromCurrentBranch(anActionEvent: AnActionEvent): String {

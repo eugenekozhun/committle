@@ -13,9 +13,10 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("", runBlocking {
-            replacer.replace("", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -25,35 +26,36 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("", runBlocking {
-            replacer.replace("", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
     fun `replace non-task-id branch empty template`() {
-        val template = "Some changes"
         mockSettingState()
         mockBranchName(BRANCH_WITHOUT_TASK_ID)
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals(template, runBlocking {
-            replacer.replace(template, anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
     fun `replace non-task-id branch template`() {
-        val template = "Some changes"
         mockSettingState(taskIdRegex = CUSTOM_TASK_ID_REGEX)
         mockBranchName(BRANCH_WITH_TASK_ID)
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals(template, runBlocking {
-            replacer.replace(template, anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -63,9 +65,10 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("[]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -75,9 +78,10 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("[CMT-000]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("CMT-000", replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -87,9 +91,10 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("[$TASK_ID]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals(TASK_ID, replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     @Test
@@ -99,9 +104,10 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("[]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals("", replacement.value)
+        assertEquals(false, replacement.hasValue)
     }
 
     @Test
@@ -111,9 +117,10 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        assertEquals("[$CUSTOM_TASK_ID]: Some changes", runBlocking {
-            replacer.replace("[${replacer.anchor}]: Some changes", anActionEventMock)
-        })
+        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+
+        assertEquals(CUSTOM_TASK_ID, replacement.value)
+        assertEquals(true, replacement.hasValue)
     }
 
     private companion object {
