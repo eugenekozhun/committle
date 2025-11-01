@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SEPARATOR
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.replacer.Replacement
 import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.util.toCase
@@ -23,8 +24,9 @@ class FilePathScopeReplacer(
 
     override val anchor = "\$SCOPE"
 
-    override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        return message.replace(anchor, extractScope(anActionEvent))
+    override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
+        val scope = extractScope(anActionEvent)
+        return Replacement(scope, scope.isNotBlank())
     }
 
     private fun extractScope(anActionEvent: AnActionEvent): String {

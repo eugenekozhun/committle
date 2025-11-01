@@ -41,6 +41,7 @@ abstract class BaseReplacerTest {
 
     @Suppress("LongParameterList")
     protected fun mockSettingState(
+        pattern: String = "",
         taskIdRegex: String = "",
         taskIdDefault: String = "",
         taskIdPostprocessor: String = "",
@@ -58,6 +59,10 @@ abstract class BaseReplacerTest {
         val settingsStorageMock = mockk<SettingsStorage>()
         val settingsStateMock = mockk<SettingsState>()
 
+        every { settingsStateMock.pattern } returns pattern
+        every { settingsStateMock.trimWhitespacesStart } returns false
+        every { settingsStateMock.trimWhitespacesEnd } returns false
+        every { settingsStateMock.unnecessaryWhitespaces } returns false
         // Task id
         every { settingsStateMock.taskIdRegex } returns taskIdRegex
         every { settingsStateMock.taskIdDefault } returns taskIdDefault

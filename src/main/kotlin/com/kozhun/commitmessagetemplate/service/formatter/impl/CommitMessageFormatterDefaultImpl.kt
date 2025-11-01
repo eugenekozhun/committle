@@ -5,7 +5,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageFormatter
-import com.kozhun.commitmessagetemplate.service.replacer.Replacer
+import com.kozhun.commitmessagetemplate.service.replacer.Replacement
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTaskIdReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTypeReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.FilePathScopeReplacer
@@ -27,18 +27,28 @@ class CommitMessageFormatterDefaultImpl(
 
     override suspend fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
         val pattern = projectStorage.state.pattern.orEmpty()
-        return replacers
-            .fold(pattern) { result, replacer -> replaceIfNeeded(replacer, result, anActionEvent) }
-            .let { whitespaceService.format(it) }
+        val replacements = collectReplacements(pattern, anActionEvent)
+        val replacedMessage = applyReplacements(pattern, replacements)
+        return whitespaceService.format(replacedMessage)
     }
 
-    private suspend fun replaceIfNeeded(
-        replacer: Replacer,
-        message: String,
-        anActionEvent: AnActionEvent
-    ): String = when {
-        message.contains(replacer.anchor) -> replacer.replace(message, anActionEvent)
-        else -> message
+    private suspend fun collectReplacements(
+        pattern: String,
+        anActionEvent: AnActionEvent,
+    ): Map<String, Replacement> {
+        return replacers
+            .filter { pattern.contains(it.anchor) }
+            .associate { replacer -> replacer.anchor to replacer.getReplacement(anActionEvent) }
+    }
+
+    private fun applyReplacements(
+        pattern: String,
+        replacements: Map<String, Replacement>,
+    ): String {
+        return replacements.entries.fold(pattern) { acc, (anchor, replacement) ->
+            val value = if (replacement.hasValue) replacement.value else ""
+            acc.replace(anchor, value)
+        }
     }
 
     companion object {

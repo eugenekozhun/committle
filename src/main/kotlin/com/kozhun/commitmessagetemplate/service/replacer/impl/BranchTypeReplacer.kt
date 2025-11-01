@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TYPE_REGEX
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.git.branch.impl.GitBranchServiceImpl
+import com.kozhun.commitmessagetemplate.service.replacer.Replacement
 import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.util.toCase
@@ -21,9 +22,9 @@ class BranchTypeReplacer(
 
     override val anchor = "\$TYPE"
 
-    override suspend fun replace(message: String, anActionEvent: AnActionEvent): String {
-        return changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
-            .let { message.replace(anchor, it) }
+    override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
+        val type = changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
+        return Replacement(type, type.isNotBlank())
     }
 
     private suspend fun getTypeFromCurrentBranch(anActionEvent: AnActionEvent): String {
