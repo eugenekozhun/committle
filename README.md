@@ -10,62 +10,66 @@
     <a href="https://plugins.jetbrains.com/plugin/23100-commit-message-template"><img alt="plugin's rating" src="https://img.shields.io/jetbrains/plugin/r/stars/23100-commit-message-template?style=flat-square"/></a>
     <a href="https://github.com/EugeneKozhun/commit-message-template/actions/workflows/publish-workflow.yml"><img alt="deploy" src="https://img.shields.io/github/actions/workflow/status/EugeneKozhun/commit-message-template/publish-workflow.yml?label=deploy&style=flat-square&logo=github"/></a>
     <a href="https://github.com/EugeneKozhun/commit-message-template/blob/main/LICENSE.md"><img alt="plugin's license" src="https://img.shields.io/github/license/EugeneKozhun/commit-message-template?style=flat-square"/></a>
+    <a href="https://github.com/EugeneKozhun/commit-message-template/commits/main"><img alt="last commit" src="https://img.shields.io/github/last-commit/EugeneKozhun/commit-message-template?style=flat-square"/></a>
     <a href="https://boosty.to/eugenekozhun"><img alt="Boosty" src="https://img.shields.io/badge/Support%20me-Boosty-ff5f5f?style=flat-square&logo=boosty&logoColor=white"/></a>
 </p>
 
-✨ **Committle** (ex. Commit Message Template)
-is a JetBrains IDE plugin that simplifies writing consistent and meaningful commit messages.
-Forget messy commits—stick to your project’s conventions with ease!
+✨ **Committle** helps you write clear, consistent commit messages in JetBrains IDEs. Keep your history clean and follow your team’s conventions with minimal effort.
 
 _Compatible with [Conventional Commits](https://www.conventionalcommits.org/)_
 
 ## 🚀 Key Features
 
-- Default commit message template: Save time by using a predefined structure.
-- Customizable variables: Dynamically set values like:
-    - Task id (Jira, Asana, etc.)
-    - Scope (e.g., feature area)
-    - Type (feat, fix, etc.)
-    - Default values for variables
-    - Autocompletion for variables in the template editor
-- Whitespace and caret formatting: Fine-tune alignment and position.
-- Shortcut for applying the template: Fast and efficient workflow.
+- Default commit message template to speed up routine commits.
+- Customizable variables with optional defaults and autocompletion in the template editor:
+  - Task id (Jira, Asana, etc.)
+  - Scope (feature/module)
+  - Type (feat, fix, etc.)
+- Whitespace and caret controls for precise formatting and cursor placement.
+- Quick action to apply the template via menu or shortcut.
 
-## 📦 Installation
+## 📦 Installation (JetBrains Marketplace)
 
-### From JetBrains Marketplace
-
-1. Open **Settings/Preferences → Plugins** in your JetBrains IDE.
+1. Open **Settings/Preferences → Plugins**.
 2. Search for **Committle** in the Marketplace tab.
 3. Click **Install** and restart the IDE.
 
-## 💡 How to Use
+## 💡 Quick Start
 
-Follow these steps to insert a commit message from your template:
+1. Configure a template in **File → Settings → Version Control → Committle**.
+2. Stage your changes and open the commit dialog.
+3. Click **Insert Pattern Message** or press **Ctrl+Shift+T** to insert the template.
+4. Fill in variables (if any), adjust the text if needed, and commit.
 
-1. Set up your template in **Settings → Version Control → Commit Template**.
-2. Stage files and open the commit dialog.
-3. Click **Insert Pattern Message** or press **Ctrl+Shift+T** to apply the template.
-4. Edit the generated text if needed and complete the commit.
+## ⚙️ Configuration
 
-## ⚙️ Customization
+In **File → Settings → Version Control → Committle** you can:
 
-Customize the plugin to your needs:
+1. Define the commit message template.
+2. Configure variables and default values.
+3. Tune whitespace and caret placement rules.
 
-1. Go to `File > Settings > Version Control > Committle`.
-2. Enter your desired commit message template.
-3. Set whitespace rules.
-4. (Optional) Configure your own rules for the variables.
-
-### Basic Template Example
+### Template example
 
 ```
-$TYPE ($SCOPE): Commit message 
-
-Description of changes
+$TYPE($SCOPE): $CARET_POSITION
 
 Closes $TASK_ID
 ```
+
+Tips:
+
+- Keep the first line under ~72 characters; put details in the body.
+- Align with your team’s Convention (e.g., Conventional Commits) for better tooling.
+
+## 🔑 Shortcuts
+
+- Apply template: **Ctrl+Shift+T** (can also be triggered via the commit dialog button).
+
+## 🧩 Compatibility
+
+- Works with Conventional Commits formatting.
+- Designed for JetBrains IDEs with the Git tool window and commit dialog.
 
 ## 🛠 Development
 
@@ -73,13 +77,11 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for commit guidelines and build instruction
 
 ## 🐞 Bug Reporting
 
-Found a bug? Have an idea for improvement? Feel free to create an issue in the
-repository: [GitHub Issues](https://github.com/EugeneKozhun/commit-message-template/issues).
+Found a bug or have an idea? Open an issue: [GitHub Issues](https://github.com/EugeneKozhun/commit-message-template/issues).
 
-## ☕ Support My Work
+## ☕ Support
 
-If you find this project helpful, consider [buying me a coffee](https://boosty.to/eugenekozhun) —
-your support helps me keep going!
+If this plugin helps you, consider supporting: [Boosty](https://boosty.to/eugenekozhun).
 
 --- 
 © 2025 Eugene Kozhun
