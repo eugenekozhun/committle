@@ -14,43 +14,39 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-        <p>This plugin makes it easy to write consistent and clear commit messages that align with your project's
-            conventions.</p>
+        <p><strong>Committle</strong> helps you write clear, consistent commit messages in JetBrains IDEs. Keep your
+            history clean and follow your team’s conventions with minimal effort. Compatible with
+            <a href="https://www.conventionalcommits.org/">Conventional Commits</a>.</p>
 
         <h3 style="margin-bottom: 0">✨ Key Features</h3>
         <ul>
-            <li>Compatible with Conventional Commits</li>
-            <li>Create and use a <strong>default commit message template</strong>.</li>
-            <li>Customize <strong>dynamic variables</strong>, such as task ID, scope, and type.</li>
-            <li>Set <strong>default values</strong> for your variables.</li>
-            <li>Benefit from <strong>variable autocompletion</strong> in the template editor.</li>
-            <li>Control <strong>caret position</strong> for quick message edits.</li>
-            <li>Maintain consistent formatting with <strong>whitespace rules</strong>.</li>
-            <li>Apply your template instantly with a <strong>shortcut</strong>.</li>
+            <li><strong>Default commit message template</strong> to speed up routine commits.</li>
+            <li>Customizable <strong>variables</strong> (task ID, scope, type) with optional <strong>defaults</strong> and
+                <strong>autocompletion</strong> in the template editor.</li>
+            <li>Precise formatting with <strong>whitespace</strong> rules and <strong>caret position</strong> control.</li>
+            <li>Apply the template instantly via a button or <strong>shortcut</strong>.</li>
         </ul>
 
         <h3>🛠️ How to Use</h3>
-        <p>It’s simple and intuitive:</p>
         <ul>
-            <li>Set up your template in <strong>Settings > Version Control > Committle</strong>.</li>
-            <li>Insert the template when committing using a button or a shortcut.</li>
-            <li>Edit dynamically populated values and commit!</li>
+            <li>Configure your template in <strong>Settings → Version Control → Committle</strong>.</li>
+            <li>Open the commit dialog and click <em>Insert Pattern Message</em> or use the shortcut <strong>Ctrl+Shift+T</strong>.</li>
+            <li>Adjust generated values (if needed) and commit.</li>
         </ul>
 
         <h3>🐞 Bug Reporting</h3>
         <p>
-            Found a bug or have an idea for improvement? Feel free to <a href="https://github.com/EugeneKozhun/commit-message-template/issues">create an issue on GitHub</a>.
+            Found a bug or have an idea? <a href="https://github.com/EugeneKozhun/commit-message-template/issues">Open an issue on GitHub</a>.
         </p>
 
-        <h3>💛 Support My Work</h3>
+        <h3>💛 Support</h3>
         <p>
-            If you find this plugin helpful, you can <a href="https://boosty.to/eugenekozhun">buy me a coffee</a> to support its development.
+            If this plugin helps you, consider supporting development on <a href="https://boosty.to/eugenekozhun">Boosty</a>.
         </p>
 
         <h3>🔗 Links</h3>
         <p>
-            <a href="https://github.com/EugeneKozhun/commit-message-template">GitHub</a> |
-            <a href="https://www.linkedin.com/in/eugene-kozhun-6a6016187/">LinkedIn</a>
+            <a href="https://github.com/EugeneKozhun/commit-message-template">GitHub</a>
         </p>
         ]]></description>
 
