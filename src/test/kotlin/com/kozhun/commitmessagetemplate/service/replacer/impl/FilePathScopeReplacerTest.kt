@@ -1,9 +1,10 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
+import com.intellij.openapi.vcs.CheckinProjectPanel
+import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
-import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase
-import com.intellij.openapi.vcs.changes.ui.ChangesTree
+import com.intellij.openapi.vcs.ui.Refreshable
 import com.intellij.openapi.vfs.VirtualFile
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import io.mockk.every
@@ -22,7 +23,6 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
         val replacer = FilePathScopeReplacer(projectMock)
-
         val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
 
         assertEquals("", replacement.value)
@@ -210,27 +210,21 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         mockkStatic(ChangeListManager::class)
 
         val changeListManagerMock = mockk<ChangeListManager>()
-        val filePaths = affectedPaths.map { mockFile(it) }
+        val filePaths = affectedPaths.map { path ->
+            val fileMock = mockk<File>()
+            every { fileMock.path } returns path
+            fileMock
+        }
 
         every { changeListManagerMock.affectedPaths } returns filePaths
         every { ChangeListManager.getInstance(projectMock) } returns changeListManagerMock
 
-        val includedChanges = mockIncludedChanges(includedPaths)
+        val includedChanges = mockChanges(includedPaths).toList()
+        val panelMock = mockk<CheckinProjectPanel>()
 
-        val changesBrowserMock = mockk<ChangesBrowserBase>(relaxed = true)
-        val changesTreeMock = mockk<ChangesTree>(relaxed = true)
-
-        every { changesBrowserMock.viewer } returns changesTreeMock
-        every { changesTreeMock.includedSet } returns includedChanges
-        every { anActionEventMock.getData(ChangesBrowserBase.DATA_KEY) } returns changesBrowserMock
-    }
-
-    private fun mockFile(path: String): File {
-        val fileMock = mockk<File>()
-
-        every { fileMock.path } returns path
-
-        return fileMock
+        every { panelMock.selectedChanges } returns includedChanges
+        every { anActionEventMock.getData(Refreshable.PANEL_KEY) } returns panelMock
+        every { anActionEventMock.getData(VcsDataKeys.CHANGES) } returns includedChanges.toTypedArray()
     }
 
     private fun mockChanges(paths: Array<String>): Array<Change> {
@@ -245,10 +239,6 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
             changeMock
         }.toTypedArray()
-    }
-
-    private fun mockIncludedChanges(paths: Array<String>): MutableSet<Change> {
-        return mockChanges(paths).toMutableSet()
     }
 
     companion object {
