@@ -4,9 +4,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vcs.CheckinProjectPanel
+import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
-import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase
+import com.intellij.openapi.vcs.ui.Refreshable
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SEPARATOR
 import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.replacer.Replacement
@@ -52,18 +54,20 @@ class FilePathScopeReplacer(
     }
 
     private fun getSelectedChangePaths(anActionEvent: AnActionEvent): Sequence<String> {
-        return anActionEvent.getData(ChangesBrowserBase.DATA_KEY)
-            ?.viewer
-            ?.includedSet
+        val panel = anActionEvent.getData(Refreshable.PANEL_KEY) as? CheckinProjectPanel
+        if (panel != null) {
+            return panel.selectedChanges.asSequence().mapNotNull(::getChangePath)
+        }
+
+        return anActionEvent.getData(VcsDataKeys.CHANGES)
             ?.asSequence()
-            ?.mapNotNull { it as? Change }
             ?.mapNotNull(::getChangePath)
             ?: emptySequence()
     }
 
     private fun getChangePath(change: Change): String? {
-        return change.virtualFile?.path
-            ?: change.afterRevision?.file?.path
+        return change.afterRevision?.file?.path
+            ?: change.virtualFile?.path
             ?: change.beforeRevision?.file?.path
     }
 
