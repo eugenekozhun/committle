@@ -9,10 +9,18 @@ import com.kozhun.commitmessagetemplate.service.caret.CaretService
 class CaretServiceDefaultImpl : CaretService {
 
     override fun getCaretOffsetByAnchor(message: String): Pair<String, Int> {
-        return when (val caretOffset = message.indexOf(CARET_POSITION_ANCHOR)) {
-            NOT_FOUND_INDEX -> message to message.length
-            else -> message.replace(CARET_POSITION_ANCHOR, "") to caretOffset
+        val anchor = CARET_POSITION_ANCHOR
+        val index = message.indexOf(anchor)
+
+        if (index == NOT_FOUND_INDEX) {
+            return message to message.length
         }
+
+        val resultMessage = StringBuilder(message)
+            .delete(index, index + anchor.length)
+            .toString()
+
+        return resultMessage to index
     }
 
     companion object {
@@ -23,3 +31,4 @@ class CaretServiceDefaultImpl : CaretService {
         fun getInstance(project: Project): CaretService = project.service<CaretServiceDefaultImpl>()
     }
 }
+
