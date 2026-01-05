@@ -51,6 +51,10 @@
         ]]></description>
 
     <change-notes><![CDATA[
+        <h3>2.3.1</h3>
+        <ul>
+            <li>Fixed the NoClassDefFoundError in latest IDE updates and improved the detection of files selected by checkboxes in the commit window.</li>
+        </ul>
         <h3>2.3.0</h3>
         <ul>
             <li>Updated the <strong>$SCOPE</strong> variable to respect included changes selected in the commit dialog.</li>
