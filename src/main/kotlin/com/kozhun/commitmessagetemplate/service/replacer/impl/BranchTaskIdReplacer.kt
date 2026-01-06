@@ -17,8 +17,8 @@ import com.kozhun.commitmessagetemplate.util.toNotBlankRegex
 class BranchTaskIdReplacer(
     private val project: Project
 ) : Replacer {
-    private val settingsStorage by lazy { SettingsStorage.getInstance(project) }
-    private val getBranchService by lazy { GitBranchServiceImpl.getInstance(project) }
+    private val settingsStorage = SettingsStorage.getInstance(project)
+    private val getBranchService = GitBranchServiceImpl.getInstance(project)
 
     override val anchor = "\$TASK_ID"
 

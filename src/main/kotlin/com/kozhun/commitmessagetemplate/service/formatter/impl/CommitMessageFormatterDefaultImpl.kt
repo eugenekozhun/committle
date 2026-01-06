@@ -15,8 +15,8 @@ import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 class CommitMessageFormatterDefaultImpl(
     project: Project
 ) : CommitMessageFormatter {
-    private val projectStorage by lazy { SettingsStorage.getInstance(project) }
-    private val whitespaceService by lazy { WhitespaceServiceDefaultImpl.getInstance(project) }
+    private val projectStorage = SettingsStorage.getInstance(project)
+    private val whitespaceService = WhitespaceServiceDefaultImpl.getInstance(project)
 
     private val replacers = listOf(
         BranchTypeReplacer.getInstance(project),
