@@ -15,7 +15,7 @@ import com.kozhun.commitmessagetemplate.util.toNotBlankRegex
 
 @Service(Service.Level.PROJECT)
 class BranchTaskIdReplacer(
-    private val project: Project
+    project: Project
 ) : Replacer {
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val getBranchService = GitBranchServiceImpl.getInstance(project)

@@ -6,6 +6,7 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.DumbAware
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
@@ -22,16 +23,22 @@ class CMTCompletionContributor : CompletionContributor(), DumbAware {
                     context: ProcessingContext,
                     result: CompletionResultSet
                 ) {
-                    listOf(
-                        LookupElementBuilder.create("\$TASK_ID").withTypeText("Task identifier extracted from branch name"),
-                        LookupElementBuilder.create("\$TYPE").withTypeText("Type of commit extracted from branch name (feature, bugfix, etc.)"),
-                        LookupElementBuilder.create("\$SCOPE").withTypeText("Scope of changes extracted from affected file paths"),
-                        LookupElementBuilder.create("\$CARET_POSITION").withTypeText("Position where cursor will be placed after template insertion")
-                    ).forEach {
-                        result.addElement(it)
-                    }
+                    val lookupElements = listOf(
+                        createVariableLookup("\$TASK_ID", "Task identifier from branch name"),
+                        createVariableLookup("\$TYPE", "Commit type from branch name"),
+                        createVariableLookup("\$SCOPE", "Scope from file paths"),
+                        createVariableLookup("\$CARET_POSITION", "Cursor placement after insertion")
+                    )
+
+                    result.addAllElements(lookupElements)
                 }
             }
         )
     }
+
+    private fun createVariableLookup(name: String, description: String) =
+        LookupElementBuilder.create(name)
+            .withIcon(AllIcons.Nodes.Variable)
+            .withBoldness(true)
+            .withTypeText(description, true)
 }

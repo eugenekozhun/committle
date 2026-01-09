@@ -3,11 +3,11 @@ package com.kozhun.commitmessagetemplate.ui.page
 import SynonymDialog
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.runWriteAction
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.options.ConfigurableWithId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.ContextHelpLabel
+import com.intellij.ui.LanguageTextField
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.BottomGap
@@ -42,7 +42,7 @@ class CMTSettingsPage(
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val settingsExporter = SettingsExporter.getInstance(project)
 
-    private lateinit var patternEditor: Editor
+    private lateinit var patternEditor: LanguageTextField
     private lateinit var panel: DialogPanel
 
     private lateinit var tableModel: ListTableModel<SynonymPair>
@@ -267,11 +267,6 @@ class CMTSettingsPage(
         return tableModel.items
             .filter { it.key.isNotBlank() && it.value.isNotBlank() }
             .associate { it.key to it.value }
-    }
-
-    override fun disposeUIResources() {
-        super.disposeUIResources()
-        PatternEditorBuilder.dispose(patternEditor)
     }
 
     override fun getDisplayName(): String {
