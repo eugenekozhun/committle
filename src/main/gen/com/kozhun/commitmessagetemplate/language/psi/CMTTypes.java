@@ -11,6 +11,7 @@ import com.kozhun.commitmessagetemplate.language.psi.impl.*;
 public interface CMTTypes {
 
   IElementType CARET_POSITION = new CMTElementType("CARET_POSITION");
+  IElementType PLAIN_TEXT = new CMTElementType("PLAIN_TEXT");
   IElementType SCOPE = new CMTElementType("SCOPE");
   IElementType TASK_ID = new CMTElementType("TASK_ID");
   IElementType TYPE = new CMTElementType("TYPE");
@@ -22,6 +23,9 @@ public interface CMTTypes {
       IElementType type = node.getElementType();
       if (type == CARET_POSITION) {
         return new CMTCaretPositionImpl(node);
+      }
+      else if (type == PLAIN_TEXT) {
+        return new CMTPlainTextImpl(node);
       }
       else if (type == SCOPE) {
         return new CMTScopeImpl(node);
