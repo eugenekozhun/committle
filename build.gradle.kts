@@ -17,7 +17,11 @@ plugins {
 group = "com.kozhun"
 version = "2.3.1"
 
-sourceSets["main"].java.srcDirs("src/main/gen")
+sourceSets {
+    main {
+        java.srcDirs("src/main/gen")
+    }
+}
 
 repositories {
     mavenCentral()
