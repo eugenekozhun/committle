@@ -1,6 +1,6 @@
 package com.kozhun.commitmessagetemplate.ui.page
 
-import SynonymDialog
+import com.kozhun.commitmessagetemplate.ui.components.SynonymDialog
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.options.ConfigurableWithId

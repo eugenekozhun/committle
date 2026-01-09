@@ -1,56 +1,48 @@
+package com.kozhun.commitmessagetemplate.ui.components
+
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.kozhun.commitmessagetemplate.ui.model.SynonymPair
 import javax.swing.JComponent
-import javax.swing.JTextField
 
 class SynonymDialog(
-    private val keys: Set<String>, private val initialValue: SynonymPair? = null
+    private val existingKeys: Set<String>,
+    private val initialValue: SynonymPair? = null
 ) : DialogWrapper(true) {
 
     var value: String = initialValue?.key.orEmpty()
     var synonym: String = initialValue?.value.orEmpty()
 
-    private lateinit var valueTextField: JTextField
-    private lateinit var synonymTextField: JTextField
-
     init {
-        init()
         title = if (initialValue == null) "Add Synonym" else "Edit Synonym"
+        init()
     }
 
     override fun createCenterPanel(): JComponent {
         return panel {
             row("Value:") {
-                valueTextField = textField().bindText(::value).focused().component
+                textField()
+                    .bindText(::value)
+                    .focused()
+                    .validationOnApply {
+                        val input = it.text.trim()
+                        when {
+                            input.isEmpty() -> error("Value cannot be empty")
+                            input != initialValue?.key && existingKeys.contains(input) ->
+                                error("Value already exists in synonyms table")
+
+                            else -> null
+                        }
+                    }
             }
             row("Synonym:") {
-                synonymTextField = textField().bindText(::synonym).component
+                textField()
+                    .bindText(::synonym)
+                    .validationOnApply {
+                        if (it.text.trim().isEmpty()) error("Synonym cannot be empty") else null
+                    }
             }
-        }
-    }
-
-    override fun doOKAction() {
-        value = valueTextField.text.trim()
-        synonym = synonymTextField.text.trim()
-
-        val validationError = validateInput()
-        if (validationError != null) {
-            setErrorText(validationError.message, validationError.component)
-            return
-        }
-
-        super.doOKAction()
-    }
-
-    private fun validateInput(): ValidationInfo? {
-        return when {
-            value.isEmpty() -> ValidationInfo("Value cannot be empty", valueTextField)
-            value != initialValue?.key && keys.contains(value)-> ValidationInfo("Value already exists in synonyms table", valueTextField)
-            synonym.isEmpty() -> ValidationInfo("Synonym cannot be empty", synonymTextField)
-            else -> null
         }
     }
 }
