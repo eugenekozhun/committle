@@ -19,18 +19,22 @@ class CMTSyntaxHighlighter : SyntaxHighlighterBase() {
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {
         return when (tokenType) {
-            CMTTypes.TASK_ID, CMTTypes.TYPE, CMTTypes.SCOPE -> keywordKeys
-            CMTTypes.CARET_POSITION -> caretPositionKeys
-            else -> arrayOf()
+            CMTTypes.TASK_ID,
+            CMTTypes.TYPE,
+            CMTTypes.SCOPE -> KEYWORD_KEYS
+
+            CMTTypes.CARET_POSITION -> CARET_KEYS
+
+            else -> EMPTY_KEYS
         }
     }
 
     companion object {
-        private val keywordKeys = arrayOf(
-            createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.CONSTANT),
-        )
-        private val caretPositionKeys = arrayOf(
-            createTextAttributesKey("CARET_POSITION", DefaultLanguageHighlighterColors.KEYWORD)
-        )
+        private val KEYWORD = createTextAttributesKey("CMT_KEYWORD", DefaultLanguageHighlighterColors.CONSTANT)
+        private val CARET = createTextAttributesKey("CMT_CARET_POSITION", DefaultLanguageHighlighterColors.KEYWORD)
+
+        private val KEYWORD_KEYS = arrayOf(KEYWORD)
+        private val CARET_KEYS = arrayOf(CARET)
+        private val EMPTY_KEYS = emptyArray<TextAttributesKey>()
     }
 }
