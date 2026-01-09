@@ -3,6 +3,7 @@ package com.kozhun.commitmessagetemplate.action
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.EDT
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.ui.CommitMessage
@@ -18,34 +19,27 @@ class GenerateCommitMessageAction : DumbAwareAction() {
         isEnabledInModalContext = true
     }
 
-    override fun getActionUpdateThread(): ActionUpdateThread {
-        return ActionUpdateThread.EDT
-    }
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
-    override fun actionPerformed(anActionEvent: AnActionEvent) {
-        val project = anActionEvent.project ?: return
-        val coroutineScope = project.getService(CoroutineScopeService::class.java).coroutineScope
+    override fun actionPerformed(e: AnActionEvent) {
+        val project = e.project ?: return
+        val commitMessage = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as? CommitMessage ?: return
+        val scope = project.service<CoroutineScopeService>().coroutineScope
 
-        coroutineScope.launch {
-            getCommitMessageInput(anActionEvent)
-                ?.apply {
-                    val formatter = CommitMessageFormatterDefaultImpl.getInstance(project)
-                    val caretService = CaretServiceDefaultImpl.getInstance(project)
-                    val (message, caretOffset) = formatter.getFormattedCommitMessage(anActionEvent)
-                        .let(caretService::getCaretOffsetByAnchor)
-                    setCommitMessageWithCaretOffset(message, caretOffset)
-                }
+        scope.launch {
+            val formatter = CommitMessageFormatterDefaultImpl.getInstance(project)
+            val caretService = CaretServiceDefaultImpl.getInstance(project)
+            val (message, offset) = formatter.getFormattedCommitMessage(e)
+                .let { caretService.getCaretOffsetByAnchor(it) }
+
+            updateUI(commitMessage, message, offset)
         }
     }
 
-    private fun getCommitMessageInput(anActionEvent: AnActionEvent): CommitMessage? {
-        return anActionEvent.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as CommitMessage?
-    }
-
-    private suspend fun CommitMessage.setCommitMessageWithCaretOffset(message: String, offset: Int) {
+    private suspend fun updateUI(commitMessage: CommitMessage, message: String, offset: Int) {
         withContext(Dispatchers.EDT) {
-            setCommitMessage(message)
-            editorField.apply {
+            commitMessage.setCommitMessage(message)
+            commitMessage.editorField.apply {
                 removeSelection()
                 requestFocus()
                 caretModel.moveToOffset(offset)
@@ -53,3 +47,4 @@ class GenerateCommitMessageAction : DumbAwareAction() {
         }
     }
 }
+

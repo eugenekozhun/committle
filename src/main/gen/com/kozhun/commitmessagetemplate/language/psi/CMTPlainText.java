@@ -5,10 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface CMTType extends PsiElement {
-
-  //WARNING: getName(...) is skipped
-  //matching getName(CMTType, ...)
-  //methods are not found in null
+public interface CMTPlainText extends PsiElement {
 
 }

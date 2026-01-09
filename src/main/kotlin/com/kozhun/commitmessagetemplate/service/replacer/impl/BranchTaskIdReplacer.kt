@@ -29,29 +29,29 @@ class BranchTaskIdReplacer(
     }
 
     private suspend fun getTaskIdFromCurrentBranch(anActionEvent: AnActionEvent): String {
-        return getBranchService.getCurrentBranch(anActionEvent).name
-            .let { getTaskIdRegex().find(it)?.value }
-            ?.let { changeCase(it) }
-            ?: getDefaultTaskIdValue()
+        val branchName = getBranchService.getCurrentBranch(anActionEvent).name
+
+        return extractTaskId(branchName)
+            ?.let { applyPostProcessing(it) }
+            ?: settingsStorage.state.taskIdDefault.orEmpty()
     }
 
-    private fun getTaskIdRegex(): Regex {
-        return settingsStorage.state.taskIdRegex?.toNotBlankRegex() ?: DEFAULT_TASK_ID_REGEX
+    private fun extractTaskId(branchName: String): String? {
+        val regex = settingsStorage.state.taskIdRegex?.toNotBlankRegex() ?: DEFAULT_TASK_ID_REGEX
+        return regex.find(branchName)?.value
     }
 
-    private fun getDefaultTaskIdValue(): String {
-        return settingsStorage.state.taskIdDefault.orEmpty()
-    }
+    private fun applyPostProcessing(value: String): String {
+        val postProcessor = settingsStorage.state.taskIdPostProcessor ?: return value
 
-    private fun changeCase(value: String): String {
-        return settingsStorage.state.taskIdPostProcessor
-            ?.let { StringCase.labelValueOf(it) }
+        return StringCase.labelValueOf(postProcessor)
             ?.let { value.toCase(it) }
             ?: value
     }
 
     companion object {
         @JvmStatic
-        fun getInstance(project: Project): Replacer = project.service<BranchTaskIdReplacer>()
+        fun getInstance(project: Project): BranchTaskIdReplacer = project.service()
     }
 }
+

@@ -5,7 +5,6 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageFormatter
-import com.kozhun.commitmessagetemplate.service.replacer.Replacement
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTaskIdReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTypeReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.FilePathScopeReplacer
@@ -17,39 +16,33 @@ class CommitMessageFormatterDefaultImpl(
     project: Project
 ) : CommitMessageFormatter {
     private val projectStorage = SettingsStorage.getInstance(project)
+    private val whitespaceService = WhitespaceServiceDefaultImpl.getInstance(project)
+
     private val replacers = listOf(
         BranchTypeReplacer.getInstance(project),
         BranchTaskIdReplacer.getInstance(project),
         FilePathScopeReplacer.getInstance(project)
     )
 
-    private val whitespaceService = WhitespaceServiceDefaultImpl.getInstance(project)
-
     override suspend fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
         val pattern = projectStorage.state.pattern.orEmpty()
-        val replacements = collectReplacements(pattern, anActionEvent)
-        val replacedMessage = applyReplacements(pattern, replacements)
+        val activeReplacers = replacers.filter { pattern.contains(it.anchor) }
+
+        if (activeReplacers.isEmpty()) {
+            return whitespaceService.format(pattern)
+        }
+
+        val replacements = activeReplacers.associate { it.anchor to it.getReplacement(anActionEvent) }
+        val anchorRegex = replacements.keys
+            .joinToString("|") { Regex.escape(it) }
+            .toRegex()
+
+        val replacedMessage = anchorRegex.replace(pattern) { matchResult ->
+            val replacement = replacements[matchResult.value]
+            if (replacement?.hasValue == true) replacement.value else ""
+        }
 
         return whitespaceService.format(replacedMessage)
-    }
-
-    private suspend fun collectReplacements(
-        pattern: String,
-        anActionEvent: AnActionEvent,
-    ): Map<String, Replacement> {
-        return replacers
-            .filter { pattern.contains(it.anchor) }
-            .associate { replacer -> replacer.anchor to replacer.getReplacement(anActionEvent) }
-    }
-
-    private fun applyReplacements(
-        pattern: String,
-        replacements: Map<String, Replacement>,
-    ): String {
-        return replacements.entries.fold(pattern) { acc, (anchor, replacement) ->
-            val value = if (replacement.hasValue) replacement.value else ""
-            acc.replace(anchor, value)
-        }
     }
 
     companion object {

@@ -1,9 +1,7 @@
 package com.kozhun.commitmessagetemplate.ui.page
 
-import SynonymDialog
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.runWriteAction
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.options.ConfigurableWithId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
@@ -27,6 +25,7 @@ import com.kozhun.commitmessagetemplate.enums.StringCase
 import com.kozhun.commitmessagetemplate.service.settings.SettingsExporter
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.ui.components.PatternEditorBuilder
+import com.kozhun.commitmessagetemplate.ui.components.SynonymDialog
 import com.kozhun.commitmessagetemplate.ui.model.SynonymColumnInfo
 import com.kozhun.commitmessagetemplate.ui.model.SynonymPair
 import com.kozhun.commitmessagetemplate.ui.util.bindNullableText
@@ -42,30 +41,26 @@ class CMTSettingsPage(
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val settingsExporter = SettingsExporter.getInstance(project)
 
-    private lateinit var patternEditor: Editor
     private lateinit var panel: DialogPanel
 
-    private lateinit var tableModel: ListTableModel<SynonymPair>
-    private lateinit var table: TableView<SynonymPair>
+    private val patternEditor = PatternEditorBuilder.buildEditor(project)
+    private val resourceBundle = ResourceBundle.getBundle("messages")
+
+    private val tableModel = ListTableModel(
+        arrayOf(
+            SynonymColumnInfo(resourceBundle.getString("settings.table.value")) { it.key },
+            SynonymColumnInfo(resourceBundle.getString("settings.table.synonym")) { it.value }
+        ),
+        getSynonymsMapFromStorage()
+    )
+
+    private val table = TableView(tableModel).apply {
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+        putClientProperty("terminateEditOnFocusLost", true)
+    }
 
     @Suppress("LongMethod")
     override fun createComponent(): JComponent {
-        patternEditor = PatternEditorBuilder.buildEditor(project)
-        val resourceBundle = ResourceBundle.getBundle("messages")
-
-        tableModel = ListTableModel(
-            arrayOf(
-                SynonymColumnInfo(resourceBundle.getString("settings.table.value")) { it.key },
-                SynonymColumnInfo(resourceBundle.getString("settings.table.synonym")) { it.value }
-            ),
-            getSynonymsMapFromStorage()
-        )
-
-        table = TableView(tableModel)
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-        table.putClientProperty("terminateEditOnFocusLost", true)
-
-
         panel = panel {
             row {
                 button(resourceBundle.getString("settings.import-settings")) {
@@ -94,20 +89,11 @@ class CMTSettingsPage(
             }
             row {
                 checkBox(resourceBundle.getString("settings.trim-whitespaces-start"))
-                    .bindSelected(
-                        { settingsStorage.state.trimWhitespacesStart },
-                        { newValue -> runWriteAction { settingsStorage.state.trimWhitespacesStart = newValue } }
-                    )
+                    .bindSelected(settingsStorage.state::trimWhitespacesStart)
                 checkBox(resourceBundle.getString("settings.trim-whitespaces-end"))
-                    .bindSelected(
-                        { settingsStorage.state.trimWhitespacesEnd },
-                        { newValue -> settingsStorage.state.trimWhitespacesEnd = newValue }
-                    )
+                    .bindSelected(settingsStorage.state::trimWhitespacesEnd)
                 checkBox(resourceBundle.getString("settings.duplicated-whitespaces"))
-                    .bindSelected(
-                        { settingsStorage.state.unnecessaryWhitespaces },
-                        { newValue -> settingsStorage.state.unnecessaryWhitespaces = newValue }
-                    )
+                    .bindSelected(settingsStorage.state::unnecessaryWhitespaces)
                 val patternHelp = listOf(
                     resourceBundle.getString("settings.message-pattern-notes.task-id"),
                     resourceBundle.getString("settings.message-pattern-notes.type"),
@@ -124,11 +110,7 @@ class CMTSettingsPage(
                             .comment(comment = resourceBundle.getString("settings.advanced.task-id.regex.comment").format(DEFAULT_TASK_ID_REGEX))
                             .align(AlignX.FILL)
                             .resizableColumn()
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.taskIdRegex },
-                                    { newValue -> runWriteAction { settingsStorage.state.taskIdRegex = newValue } })
-                            )
+                            .bindNullableText(settingsStorage.state::taskIdRegex)
                         cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.current-branch"))).align(AlignX.RIGHT)
                     }
                     row {
@@ -136,18 +118,10 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.task-id.default.value"), LabelPosition.TOP)
                             .comment(resourceBundle.getString("settings.advanced.task-id.default.comment"))
                             .align(AlignX.FILL)
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.taskIdDefault },
-                                    { newValue -> runWriteAction { settingsStorage.state.taskIdDefault = newValue } })
-                            )
+                            .bindNullableText(settingsStorage.state::taskIdDefault)
                         comboBox(StringCase.values().map { it.label })
                             .label(resourceBundle.getString("settings.advanced.common.postprocess"), LabelPosition.TOP)
-                            .bindItem(
-                                MutableProperty(
-                                    { settingsStorage.state.taskIdPostProcessor },
-                                    { newValue -> runWriteAction { settingsStorage.state.taskIdPostProcessor = newValue } })
-                            )
+                            .bindItem(settingsStorage.state::taskIdPostProcessor)
                     }
                 }.apply {
                     expanded = !settingsStorage.state.isDefaultTaskFields()
@@ -159,11 +133,7 @@ class CMTSettingsPage(
                             .comment(comment = resourceBundle.getString("settings.advanced.type.regex.comment").format(DEFAULT_TYPE_REGEX))
                             .align(AlignX.FILL)
                             .resizableColumn()
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.typeRegex },
-                                    { newValue -> runWriteAction { settingsStorage.state.typeRegex = newValue } })
-                            )
+                            .bindNullableText(settingsStorage.state::typeRegex)
                         cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.current-branch"))).align(AlignX.RIGHT)
                     }
                     row {
@@ -171,18 +141,10 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.type.default-type.value"), LabelPosition.TOP)
                             .comment(resourceBundle.getString("settings.advanced.type.default-type.comment"))
                             .align(AlignX.FILL)
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.typeDefault },
-                                    { newValue -> runWriteAction { settingsStorage.state.typeDefault = newValue } })
-                            )
+                            .bindNullableText(settingsStorage.state::typeDefault)
                         comboBox(StringCase.values().map { it.label }, null)
                             .label(resourceBundle.getString("settings.advanced.common.postprocess"), LabelPosition.TOP)
-                            .bindItem(
-                                MutableProperty(
-                                    { settingsStorage.state.typePostprocessor },
-                                    { newValue -> runWriteAction { settingsStorage.state.typePostprocessor = newValue } })
-                            )
+                            .bindItem(settingsStorage.state::typePostprocessor)
                     }
                     group(resourceBundle.getString("settings.advanced.type.synonyms"), indent = false) {
                         row {
@@ -198,40 +160,23 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.common.label"), LabelPosition.TOP)
                             .align(AlignX.FILL)
                             .resizableColumn()
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.scopeRegex },
-                                    { newValue -> runWriteAction { settingsStorage.state.scopeRegex = newValue } })
-                            )
-                        cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.file-path")))
-                            .align(AlignX.RIGHT)
+                            .bindNullableText(settingsStorage.state::scopeRegex)
+                        cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.file-path"))).align(AlignX.RIGHT)
                     }
                     row {
                         textField()
                             .label(resourceBundle.getString("settings.advanced.scope.default-value"), LabelPosition.TOP)
                             .comment(resourceBundle.getString("settings.advanced.scope.default.comment"))
                             .align(AlignX.FILL)
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.scopeDefault },
-                                    { newValue -> runWriteAction { settingsStorage.state.scopeDefault = newValue } })
-                            )
+                            .bindNullableText(settingsStorage.state::scopeDefault)
                         textField()
                             .label(resourceBundle.getString("settings.advanced.common.separator"), LabelPosition.TOP)
                             .comment(comment = resourceBundle.getString("settings.advanced.scope.separator.comment").format(DEFAULT_SCOPE_SEPARATOR))
                             .align(AlignX.FILL)
-                            .bindNullableText(
-                                MutableProperty(
-                                    { settingsStorage.state.scopeSeparator },
-                                    { newValue -> runWriteAction { settingsStorage.state.scopeSeparator = newValue } })
-                            )
+                            .bindNullableText(settingsStorage.state::scopeSeparator)
                         comboBox(StringCase.values().map { it.label })
                             .label(resourceBundle.getString("settings.advanced.common.postprocess"), LabelPosition.TOP)
-                            .bindItem(
-                                MutableProperty(
-                                    { settingsStorage.state.scopePostprocessor },
-                                    { newValue -> runWriteAction { settingsStorage.state.scopePostprocessor = newValue } })
-                            )
+                            .bindItem(settingsStorage.state::scopePostprocessor)
                     }
                 }.apply {
                     expanded = !settingsStorage.state.isDefaultScopeFields()
@@ -247,16 +192,16 @@ class CMTSettingsPage(
     }
 
     override fun apply() {
-        settingsStorage.state.typeSynonyms = getSynonymsMapFromTable().toMutableMap()
         panel.apply()
+        settingsStorage.state.typeSynonyms = getSynonymsMapFromTable().toMutableMap()
     }
 
     override fun reset() {
+        panel.reset()
         tableModel.apply {
             items = getSynonymsMapFromStorage()
             fireTableDataChanged()
         }
-        panel.reset()
     }
 
     private fun getSynonymsMapFromStorage() = settingsStorage.state.typeSynonyms
@@ -267,11 +212,6 @@ class CMTSettingsPage(
         return tableModel.items
             .filter { it.key.isNotBlank() && it.value.isNotBlank() }
             .associate { it.key to it.value }
-    }
-
-    override fun disposeUIResources() {
-        super.disposeUIResources()
-        PatternEditorBuilder.dispose(patternEditor)
     }
 
     override fun getDisplayName(): String {

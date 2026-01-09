@@ -22,17 +22,18 @@ import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.*;
 %type IElementType
 %unicode
 
-WHITE_SPACE=\s+
-MESSAGE_PART=[^$]+
+WHITE_SPACE=[ \t\n\x0B\f\r]+
+TEXT_SAFE=[^$\s]+
 
 %%
 <YYINITIAL> {
-  \$TASK_ID         { return TASK_ID; }
-  \$TYPE            { return TYPE; }
-  \$SCOPE           { return SCOPE; }
-  \$CARET_POSITION  { return CARET_POSITION; }
-  {WHITE_SPACE}     { return WHITE_SPACE; }
-  {MESSAGE_PART}    { return OTHER_TEXT; }
+  "\$TASK_ID"         { return TASK_ID; }
+  "\$TYPE"            { return TYPE; }
+  "\$SCOPE"           { return SCOPE; }
+  "\$CARET_POSITION"  { return CARET_POSITION; }
+  {WHITE_SPACE}       { return WHITE_SPACE; }
+  {TEXT_SAFE}         { return OTHER_TEXT; }
+  "$"                 { return OTHER_TEXT; }
 }
 
 [^] { return OTHER_TEXT; }

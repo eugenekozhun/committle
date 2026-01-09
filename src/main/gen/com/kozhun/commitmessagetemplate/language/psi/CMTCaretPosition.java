@@ -7,4 +7,8 @@ import com.intellij.psi.PsiElement;
 
 public interface CMTCaretPosition extends PsiElement {
 
+  //WARNING: getName(...) is skipped
+  //matching getName(CMTCaretPosition, ...)
+  //methods are not found in null
+
 }

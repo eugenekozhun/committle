@@ -7,4 +7,8 @@ import com.intellij.psi.PsiElement;
 
 public interface CMTTaskId extends PsiElement {
 
+  //WARNING: getName(...) is skipped
+  //matching getName(CMTTaskId, ...)
+  //methods are not found in null
+
 }

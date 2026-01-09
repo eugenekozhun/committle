@@ -11,14 +11,14 @@ import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.kozhun.commitmessagetemplate.language.psi.*;
 
-public class CMTScopeImpl extends ASTWrapperPsiElement implements CMTScope {
+public class CMTPlainTextImpl extends ASTWrapperPsiElement implements CMTPlainText {
 
-  public CMTScopeImpl(@NotNull ASTNode node) {
+  public CMTPlainTextImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull CMTVisitor visitor) {
-    visitor.visitScope(this);
+    visitor.visitPlainText(this);
   }
 
   @Override

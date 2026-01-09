@@ -23,7 +23,7 @@ class CommitMessageFormatterDefaultImplTest : BaseReplacerTest() {
         mockSettingState(pattern = "\$TYPE \$TASK_ID \$SCOPE")
 
         val branchTypeReplacer = mockk<Replacer>()
-        val branchTaskIdReplacer = mockk<Replacer>()
+        val branchTaskIdReplacer = mockk<BranchTaskIdReplacer>()
         val filePathScopeReplacer = mockk<Replacer>()
         val whitespaceService = mockk<WhitespaceService>()
 

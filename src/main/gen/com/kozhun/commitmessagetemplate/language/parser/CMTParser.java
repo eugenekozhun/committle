@@ -1,120 +1,139 @@
 // This is a generated file. Not intended for manual editing.
 package com.kozhun.commitmessagetemplate.language.parser;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LightPsiParser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
-import com.intellij.lang.PsiParser;
+import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.*;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
 import com.intellij.psi.tree.IElementType;
-
-import static com.intellij.lang.parser.GeneratedParserUtilBase.TRUE_CONDITION;
-import static com.intellij.lang.parser.GeneratedParserUtilBase._COLLAPSE_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase._NONE_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.adapt_builder_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeToken;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.current_position_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.empty_element_parsed_guard_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.enter_section_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.exit_section_;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.recursion_guard_;
-import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.CARET_POSITION;
-import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.OTHER_TEXT;
-import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.SCOPE;
-import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.TASK_ID;
-import static com.kozhun.commitmessagetemplate.language.psi.CMTTypes.TYPE;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.TokenSet;
+import com.intellij.lang.PsiParser;
+import com.intellij.lang.LightPsiParser;
 
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class CMTParser implements PsiParser, LightPsiParser {
 
-  public ASTNode parse(IElementType t, PsiBuilder b) {
-    parseLight(t, b);
-    return b.getTreeBuilt();
+  public ASTNode parse(IElementType root_, PsiBuilder builder_) {
+    parseLight(root_, builder_);
+    return builder_.getTreeBuilt();
   }
 
-  public void parseLight(IElementType t, PsiBuilder b) {
-    boolean r;
-    b = adapt_builder_(t, b, this, null);
-    Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-    r = parse_root_(t, b);
-    exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
+  public void parseLight(IElementType root_, PsiBuilder builder_) {
+    boolean result_;
+    builder_ = adapt_builder_(root_, builder_, this, null);
+    Marker marker_ = enter_section_(builder_, 0, _COLLAPSE_, null);
+    result_ = parse_root_(root_, builder_);
+    exit_section_(builder_, 0, marker_, root_, result_, true, TRUE_CONDITION);
   }
 
-  protected boolean parse_root_(IElementType t, PsiBuilder b) {
-    return parse_root_(t, b, 0);
+  protected boolean parse_root_(IElementType root_, PsiBuilder builder_) {
+    return parse_root_(root_, builder_, 0);
   }
 
-  static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
-    return cmtFile(b, l + 1);
+  static boolean parse_root_(IElementType root_, PsiBuilder builder_, int level_) {
+    return cmtFile(builder_, level_ + 1);
   }
 
   /* ********************************************************** */
   // '$CARET_POSITION'
-  public static boolean caret_position(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "caret_position")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, CARET_POSITION, "<caret position>");
-    r = consumeToken(b, "$CARET_POSITION");
-    exit_section_(b, l, m, r, false, null);
-    return r;
+  public static boolean caret_position(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "caret_position")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, CARET_POSITION, "<caret position>");
+    result_ = consumeToken(builder_, "$CARET_POSITION");
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // content_
+  static boolean cmtFile(PsiBuilder builder_, int level_) {
+    return content_(builder_, level_ + 1);
   }
 
   /* ********************************************************** */
   // item_*
-  static boolean cmtFile(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "cmtFile")) return false;
+  static boolean content_(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "content_")) return false;
     while (true) {
-      int c = current_position_(b);
-      if (!item_(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "cmtFile", c)) break;
+      int pos_ = current_position_(builder_);
+      if (!item_(builder_, level_ + 1)) break;
+      if (!empty_element_parsed_guard_(builder_, "content_", pos_)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // task_id|type|scope|caret_position|OTHER_TEXT
-  static boolean item_(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "item_")) return false;
-    boolean r;
-    r = task_id(b, l + 1);
-    if (!r) r = type(b, l + 1);
-    if (!r) r = scope(b, l + 1);
-    if (!r) r = caret_position(b, l + 1);
-    if (!r) r = consumeToken(b, OTHER_TEXT);
-    return r;
+  // variable_ | plain_text
+  static boolean item_(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "item_")) return false;
+    boolean result_;
+    result_ = variable_(builder_, level_ + 1);
+    if (!result_) result_ = plain_text(builder_, level_ + 1);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // OTHER_TEXT+
+  public static boolean plain_text(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "plain_text")) return false;
+    if (!nextTokenIs(builder_, OTHER_TEXT)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeToken(builder_, OTHER_TEXT);
+    while (result_) {
+      int pos_ = current_position_(builder_);
+      if (!consumeToken(builder_, OTHER_TEXT)) break;
+      if (!empty_element_parsed_guard_(builder_, "plain_text", pos_)) break;
+    }
+    exit_section_(builder_, marker_, PLAIN_TEXT, result_);
+    return result_;
   }
 
   /* ********************************************************** */
   // '$SCOPE'
-  public static boolean scope(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "scope")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SCOPE, "<scope>");
-    r = consumeToken(b, "$SCOPE");
-    exit_section_(b, l, m, r, false, null);
-    return r;
+  public static boolean scope(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "scope")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, SCOPE, "<scope>");
+    result_ = consumeToken(builder_, "$SCOPE");
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
   }
 
   /* ********************************************************** */
   // '$TASK_ID'
-  public static boolean task_id(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "task_id")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, TASK_ID, "<task id>");
-    r = consumeToken(b, "$TASK_ID");
-    exit_section_(b, l, m, r, false, null);
-    return r;
+  public static boolean task_id(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "task_id")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, TASK_ID, "<task id>");
+    result_ = consumeToken(builder_, "$TASK_ID");
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
   }
 
   /* ********************************************************** */
   // '$TYPE'
-  public static boolean type(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "type")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, TYPE, "<type>");
-    r = consumeToken(b, "$TYPE");
-    exit_section_(b, l, m, r, false, null);
-    return r;
+  public static boolean type(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "type")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, TYPE, "<type>");
+    result_ = consumeToken(builder_, "$TYPE");
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // task_id | type | scope | caret_position
+  static boolean variable_(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "variable_")) return false;
+    boolean result_;
+    result_ = task_id(builder_, level_ + 1);
+    if (!result_) result_ = type(builder_, level_ + 1);
+    if (!result_) result_ = scope(builder_, level_ + 1);
+    if (!result_) result_ = caret_position(builder_, level_ + 1);
+    return result_;
   }
 
 }
