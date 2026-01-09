@@ -17,7 +17,6 @@ import io.mockk.unmockkAll
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -132,7 +131,7 @@ class GitBranchServiceImplTest {
                 gitBranchService.getCurrentBranch(anActionEventMock)
             }
         }
-        assertEquals("Git repository not found for the selected file.", exception.message)
+        assertEquals("Current git branch not found.", exception.message)
     }
 
     @Test
