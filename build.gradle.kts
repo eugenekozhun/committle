@@ -10,12 +10,13 @@ plugins {
     id("org.jetbrains.intellij") version "1.17.4"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.grammarkit") version "2023.3.0.1"
+    id("org.jetbrains.changelog") version "2.5.0"
 
     kotlin("plugin.serialization") version "2.1.21"
 }
 
 group = "com.kozhun"
-version = "2.3.1"
+version = providers.gradleProperty("pluginVersion").get()
 
 sourceSets {
     main {
@@ -32,6 +33,11 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
+}
+
+changelog {
+    version.set(project.version.toString())
+    path.set("${project.projectDir}/CHANGELOG.md")
 }
 
 intellij {
