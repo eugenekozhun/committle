@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val mockkVersion = "1.13.12"
@@ -70,6 +71,17 @@ tasks {
     patchPluginXml {
         sinceBuild.set("231")
         untilBuild.set("253.*")
+
+        version.set(project.version.toString())
+
+        changeNotes.set(provider {
+            changelog.renderItem(
+                changelog.get(project.version.toString())
+                    .withHeader(false)
+                    .withEmptySections(false),
+                Changelog.OutputType.HTML
+            )
+        })
     }
 
     signPlugin {
