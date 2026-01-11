@@ -1,4 +1,5 @@
 import org.jetbrains.changelog.Changelog
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val mockkVersion = "1.13.13"
@@ -36,11 +37,13 @@ dependencies {
     intellijPlatform {
         intellijIdeaCommunity("2023.1.5")
         bundledPlugin("Git4Idea")
+        testFramework(TestFrameworkType.Platform)
     }
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJson")
 
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
