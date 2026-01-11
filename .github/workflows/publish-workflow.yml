@@ -6,11 +6,32 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Patch Changelog
+        run: ./gradlew patchChangelog
+
+      - name: Commit Updated Changelog
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG.md for release" || echo "No changes to commit"
+          git push origin HEAD:main
 
       - name: Build, Sign & Publish Plugin
         run: ./gradlew clean publishPlugin -x buildSearchableOptions

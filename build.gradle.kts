@@ -26,6 +26,12 @@ sourceSets {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 repositories {
     mavenCentral()
     intellijPlatform {
@@ -88,13 +94,13 @@ tasks {
     }
 
     withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        options.release.set(17)
     }
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
+            jvmTarget.set(JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
         }
     }
 
