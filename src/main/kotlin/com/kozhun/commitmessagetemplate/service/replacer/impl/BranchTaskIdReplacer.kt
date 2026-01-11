@@ -20,7 +20,7 @@ class BranchTaskIdReplacer(
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val getBranchService = GitBranchServiceImpl.getInstance(project)
 
-    override val anchor = "\$TASK_ID"
+    override val anchor = $$"$TASK_ID"
 
     override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
         val taskId = getTaskIdFromCurrentBranch(anActionEvent)

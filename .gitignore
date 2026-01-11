@@ -24,3 +24,6 @@ node_modules/
 
 ### Kotlin ###
 .kotlin
+
+### Intellij Platform ###
+.intellijPlatform

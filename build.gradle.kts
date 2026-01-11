@@ -1,19 +1,20 @@
 import org.jetbrains.changelog.Changelog
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val mockkVersion = "1.13.12"
-val junitVersion = "5.11.0"
-val kotlinxSerializationJson = "1.7.3"
+val mockkVersion = "1.13.13"
+val junitVersion = "5.11.4"
+val kotlinxSerializationJson = "1.8.0"
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.1.21"
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
+    id("org.jetbrains.intellij.platform") version "2.10.5"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.grammarkit") version "2023.3.0.1"
     id("org.jetbrains.changelog") version "2.5.0"
 
-    kotlin("plugin.serialization") version "2.1.21"
+    kotlin("plugin.serialization") version "2.3.0"
 }
 
 group = "com.kozhun"
@@ -27,12 +28,22 @@ sourceSets {
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity("2023.1.5")
+        bundledPlugin("Git4Idea")
+        testFramework(TestFrameworkType.Platform)
+    }
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJson")
 
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
@@ -41,15 +52,34 @@ changelog {
     path.set("${project.projectDir}/CHANGELOG.md")
 }
 
-intellij {
-    version.set("2023.1.5")
-    type.set("IC")
+intellijPlatform {
+    pluginConfiguration {
+        version.set(project.version.toString())
 
-    plugins.set(
-        listOf(
-            "Git4Idea"
-        )
-    )
+        ideaVersion {
+            sinceBuild.set("231")
+            untilBuild.set("253.*")
+        }
+
+        changeNotes.set(provider {
+            changelog.renderItem(
+                changelog.get(project.version.toString())
+                    .withHeader(false)
+                    .withEmptySections(false),
+                Changelog.OutputType.HTML
+            )
+        })
+    }
+
+    signing {
+        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+        privateKey.set(System.getenv("PRIVATE_KEY"))
+        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+    }
+
+    publishing {
+        token.set(System.getenv("PUBLISH_TOKEN"))
+    }
 }
 
 tasks {
@@ -66,32 +96,6 @@ tasks {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
         }
-    }
-
-    patchPluginXml {
-        sinceBuild.set("231")
-        untilBuild.set("253.*")
-
-        version.set(project.version.toString())
-
-        changeNotes.set(provider {
-            changelog.renderItem(
-                changelog.get(project.version.toString())
-                    .withHeader(false)
-                    .withEmptySections(false),
-                Changelog.OutputType.HTML
-            )
-        })
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
     }
 
     generateParser {

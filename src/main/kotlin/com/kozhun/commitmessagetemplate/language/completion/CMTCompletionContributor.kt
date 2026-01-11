@@ -24,10 +24,10 @@ class CMTCompletionContributor : CompletionContributor(), DumbAware {
                     result: CompletionResultSet
                 ) {
                     val lookupElements = listOf(
-                        createVariableLookup("\$TASK_ID", "Task identifier from branch name"),
-                        createVariableLookup("\$TYPE", "Commit type from branch name"),
-                        createVariableLookup("\$SCOPE", "Scope from file paths"),
-                        createVariableLookup("\$CARET_POSITION", "Cursor placement after insertion")
+                        createVariableLookup($$"$TASK_ID", "Task identifier from branch name"),
+                        createVariableLookup($$"$TYPE", "Commit type from branch name"),
+                        createVariableLookup($$"$SCOPE", "Scope from file paths"),
+                        createVariableLookup($$"$CARET_POSITION", "Cursor placement after insertion")
                     )
 
                     result.addAllElements(lookupElements)
