@@ -25,7 +25,7 @@ class CaretServiceDefaultImpl : CaretService {
 
     companion object {
         private const val NOT_FOUND_INDEX = -1
-        const val CARET_POSITION_ANCHOR = "\$CARET_POSITION"
+        const val CARET_POSITION_ANCHOR = $$"$CARET_POSITION"
 
         @JvmStatic
         fun getInstance(project: Project): CaretService = project.service<CaretServiceDefaultImpl>()

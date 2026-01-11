@@ -24,7 +24,7 @@ class FilePathScopeReplacer(
     private val changeListManager = ChangeListManager.getInstance(project)
     private val settingsStorage = SettingsStorage.getInstance(project)
 
-    override val anchor = "\$SCOPE"
+    override val anchor = $$"$SCOPE"
 
     override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
         val scope = extractScope(anActionEvent)
