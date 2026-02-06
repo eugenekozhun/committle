@@ -68,10 +68,11 @@ intellijPlatform {
         }
 
         changeNotes.set(provider {
+            val item = changelog.getOrNull(project.version.toString())
+                ?: changelog.getUnreleased()
+
             changelog.renderItem(
-                changelog.get(project.version.toString())
-                    .withHeader(false)
-                    .withEmptySections(false),
+                item.withHeader(false).withEmptySections(false),
                 Changelog.OutputType.HTML
             )
         })
