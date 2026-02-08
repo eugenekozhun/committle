@@ -6,10 +6,6 @@
 
 ### Changed
 
-- Migrated to the new IntelliJ Platform Gradle Plugin (v2.10.5).
-- Updated Gradle wrapper to **9.2.1**.
-- Updated Kotlin to **2.3.0**.
-
 ### Deprecated
 
 ### Removed
@@ -17,6 +13,14 @@
 ### Fixed
 
 ### Security
+
+## 2.5.0 - 2026-02-08
+
+### Changed
+
+- Migrated to the new IntelliJ Platform Gradle Plugin (v2.10.5).
+- Updated Gradle wrapper to **9.2.1**.
+- Updated Kotlin to **2.3.0**.
 
 ## 2.4.0 - 2026-01-10
 
