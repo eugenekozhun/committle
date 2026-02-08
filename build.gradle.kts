@@ -9,7 +9,7 @@ val kotlinxSerializationJson = "1.8.0"
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.3.0"
-    id("org.jetbrains.intellij.platform") version "2.10.5"
+    id("org.jetbrains.intellij.platform") version "2.11.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.grammarkit") version "2023.3.0.1"
     id("org.jetbrains.changelog") version "2.5.0"
@@ -59,6 +59,8 @@ changelog {
 }
 
 intellijPlatform {
+    buildSearchableOptions.set(false)
+
     pluginConfiguration {
         version.set(project.version.toString())
 
@@ -90,6 +92,10 @@ intellijPlatform {
 }
 
 tasks {
+    prepareJarSearchableOptions {
+        enabled = false
+    }
+
     test {
         useJUnitPlatform()
     }

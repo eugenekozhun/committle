@@ -35,7 +35,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Build, Sign & Publish Plugin
-        run: ./gradlew clean publishPlugin -x buildSearchableOptions
+        run: ./gradlew clean publishPlugin
         env:
           CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
