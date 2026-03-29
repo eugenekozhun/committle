@@ -16,8 +16,6 @@
 
 ✨ **Committle** helps you write clear, consistent commit messages in JetBrains IDEs. Keep your history clean and follow your team’s conventions with minimal effort.
 
-_Compatible with [Conventional Commits](https://www.conventionalcommits.org/)_
-
 ## 🚀 Key Features
 
 - Default commit message template to speed up routine commits.
@@ -28,18 +26,16 @@ _Compatible with [Conventional Commits](https://www.conventionalcommits.org/)_
 - Whitespace and caret controls for precise formatting and cursor placement.
 - Quick action to apply the template via menu or shortcut.
 
-## 📦 Installation (JetBrains Marketplace)
+## 📦 Installation
 
-1. Open **Settings/Preferences → Plugins**.
-2. Search for **Committle** in the Marketplace tab.
-3. Click **Install** and restart the IDE.
+1. [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23100-committle)
 
 ## 💡 Quick Start
 
 1. Configure a template in **File → Settings → Version Control → Committle**.
-2. Stage your changes and open the commit dialog.
-3. Click **Insert Pattern Message** or press **Ctrl+Shift+T** to insert the template.
-4. Fill in variables (if any), adjust the text if needed, and commit.
+   1. Stage your changes and open the commit dialog.
+2. Open commit dialog, click **Insert Pattern Message** or press **Ctrl+Shift+T** to insert the template.
+   1. Fill in variables (if any), adjust the text if needed, and commit.
 
 ## ⚙️ Configuration
 
@@ -57,31 +53,13 @@ $TYPE($SCOPE): $CARET_POSITION
 Closes $TASK_ID
 ```
 
-Tips:
-
-- Keep the first line under ~72 characters; put details in the body.
-- Align with your team’s Convention (e.g., Conventional Commits) for better tooling.
-
 ## 🔑 Shortcuts
 
 - Apply template: **Ctrl+Shift+T** (can also be triggered via the commit dialog button).
-
-## 🧩 Compatibility
-
-- Works with Conventional Commits formatting.
-- Designed for JetBrains IDEs with the Git tool window and commit dialog.
-
-## 🛠 Development
-
-See [DEVELOPMENT.md](DEVELOPMENT.md) for commit guidelines and build instructions.
-
-## 🐞 Bug Reporting
-
-Found a bug or have an idea? Open an issue: [GitHub Issues](https://github.com/EugeneKozhun/commit-message-template/issues).
 
 ## ☕ Support
 
 If this plugin helps you, consider supporting: [Boosty](https://boosty.to/eugenekozhun).
 
 --- 
-© 2025 Eugene Kozhun
+© 2026 Eugene Kozhun
