@@ -20,22 +20,15 @@
 
 - Default commit message template to speed up routine commits.
 - Customizable variables with optional defaults and autocompletion in the template editor:
-  - Task id (Jira, Asana, etc.)
-  - Scope (feature/module)
-  - Type (feat, fix, etc.)
+  - Scope (module, global, etc.)
+  - Type (feat, fix, chore, etc.)
+  - Task ID (CMT-001, TASK-67, etc.)
 - Whitespace and caret controls for precise formatting and cursor placement.
 - Quick action to apply the template via menu or shortcut.
 
 ## 📦 Installation
 
 1. [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23100-committle)
-
-## 💡 Quick Start
-
-1. Configure a template in **File → Settings → Version Control → Committle**.
-   1. Stage your changes and open the commit dialog.
-2. Open commit dialog, click **Insert Pattern Message** or press **Ctrl+Shift+T** to insert the template.
-   1. Fill in variables (if any), adjust the text if needed, and commit.
 
 ## ⚙️ Configuration
 
@@ -53,9 +46,13 @@ $TYPE($SCOPE): $CARET_POSITION
 Closes $TASK_ID
 ```
 
-## 🔑 Shortcuts
+## 🔑 Apply pattern
 
-- Apply template: **Ctrl+Shift+T** (can also be triggered via the commit dialog button).
+Open commit dialog, click **Insert Pattern Message**.
+
+### Shortcut
+
+- Apply template: **Ctrl+Shift+T**.
 
 ## ☕ Support
 
