@@ -20,9 +20,9 @@
 
 - Default commit message template to speed up routine commits.
 - Customizable variables with optional defaults and autocompletion in the template editor:
-  - Scope (module, global, etc.)
-  - Type (feat, fix, chore, etc.)
-  - Task ID (CMT-001, TASK-67, etc.)
+  - Scope
+  - Type
+  - Task ID
 - Whitespace and caret controls for precise formatting and cursor placement.
 - Quick action to apply the template via menu or shortcut.
 
