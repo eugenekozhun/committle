@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-- Update default type regex to follow Conventional Commits format.
+- Update default type regex to follow the Conventional Commits format.
+- Update Kotlin to 2.3.1.
+- Update Gradle to 9.4.1.
+- Update minimal compatible IDE version to 2025.3.
+- Update IntelliJ platform to 2.14.1.
 
 ### Added
 
