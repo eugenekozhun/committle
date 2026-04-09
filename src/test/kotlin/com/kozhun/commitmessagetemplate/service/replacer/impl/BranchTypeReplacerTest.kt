@@ -121,7 +121,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
 
-        assertEquals("feature", replacement.value)
+        assertEquals("feat", replacement.value)
         assertEquals(true, replacement.hasValue)
     }
 
@@ -134,7 +134,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
 
-        assertEquals("FEATURE", replacement.value)
+        assertEquals("FEAT", replacement.value)
         assertEquals(true, replacement.hasValue)
     }
 
@@ -147,7 +147,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
 
-        assertEquals("Feature", replacement.value)
+        assertEquals("Feat", replacement.value)
         assertEquals(true, replacement.hasValue)
     }
 
@@ -167,7 +167,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
     private companion object {
         const val BRANCH_WITHOUT_TYPE_ID = "master"
 
-        const val TYPE = "feature"
+        const val TYPE = "feat"
         const val TYPE_DEFAULT = "default"
         const val BRANCH_WITH_TYPE = "$TYPE/CMT-123-refactoring"
 

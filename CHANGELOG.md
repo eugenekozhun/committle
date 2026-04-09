@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update default type regex to follow Conventional Commits format.
+
 ### Added
 
 ### Changed
