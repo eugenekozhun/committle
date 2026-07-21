@@ -66,7 +66,7 @@ intellijPlatform {
 
         ideaVersion {
             sinceBuild.set("231")
-            untilBuild.set("261.*")
+            untilBuild.set("262.*")
         }
 
         changeNotes.set(provider {
