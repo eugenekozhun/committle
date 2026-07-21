@@ -6,8 +6,6 @@
 
 ### Changed
 
-- Update default type regex to follow Conventional Commits format.
-
 ### Deprecated
 
 ### Removed
@@ -15,6 +13,12 @@
 ### Fixed
 
 ### Security
+
+## 2.6.0 - 2026-07-21
+
+### Changed
+
+- Update default type regex to follow Conventional Commits format.
 
 ## 2.5.0 - 2026-02-08
 
