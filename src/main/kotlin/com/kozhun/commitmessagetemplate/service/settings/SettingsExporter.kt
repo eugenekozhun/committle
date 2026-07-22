@@ -8,8 +8,6 @@ import com.kozhun.commitmessagetemplate.storage.SettingsState
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.storage.toExportableSettings
 import com.kozhun.commitmessagetemplate.ui.util.showCommittleNotification
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.awt.FileDialog
 import java.awt.Frame

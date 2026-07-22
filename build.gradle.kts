@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val mockkVersion = "1.13.13"
 val junitVersion = "5.11.4"
-val kotlinxSerializationJson = "1.8.0"
+val kotlinxSerializationJson = "1.11.0"
 
 plugins {
     id("java")
@@ -41,7 +41,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity("2023.1.5")
+        intellijIdea("2025.3")
         bundledPlugin("Git4Idea")
         testFramework(TestFrameworkType.Platform)
     }
@@ -65,7 +65,7 @@ intellijPlatform {
         version.set(project.version.toString())
 
         ideaVersion {
-            sinceBuild.set("231")
+            sinceBuild.set("253")
             untilBuild.set("262.*")
         }
 
