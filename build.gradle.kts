@@ -2,14 +2,14 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val mockkVersion = "1.13.13"
+val mockkVersion = "1.14.11"
 val junitVersion = "5.11.4"
-val kotlinxSerializationJson = "1.11.0"
+val kotlinxSerializationJson = "1.10.0"
 
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.4.10"
-    id("org.jetbrains.intellij.platform") version "2.11.0"
+    id("org.jetbrains.intellij.platform") version "2.18.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.grammarkit") version "2023.3.0.1"
     id("org.jetbrains.changelog") version "2.5.0"
