@@ -1,138 +1,110 @@
 # AGENTS.md
 
-Guidance for Codex and other coding agents working in this repository.
+Guidance for AI coding agents working in this repository.
 
 ## Scope
 
-These instructions apply to the whole repository. If a more specific `AGENTS.md` is added in a subdirectory, that file
-takes precedence for files under that subdirectory.
+These instructions apply to the entire repository. A more specific `AGENTS.md` in a subdirectory takes precedence for
+files under that directory.
 
 ## Project Overview
 
-Committle is a JetBrains IDE plugin written in Kotlin. It helps generate commit messages from configurable templates and
-custom variables.
+Committle is a JetBrains IDE plugin written in Kotlin. It generates commit messages from configurable templates and
+variables such as `$TASK_ID`, `$TYPE`, `$SCOPE`, and `$CARET_POSITION`.
 
-Important project areas:
+Key project areas:
 
-- `src/main/kotlin/com/kozhun/commitmessagetemplate/action`: IDE actions, including commit-message insertion.
-- `src/main/kotlin/com/kozhun/commitmessagetemplate/service`: business logic for formatting, caret handling, whitespace
-  handling, branch parsing, and replacement values.
+- `src/main/kotlin/com/kozhun/commitmessagetemplate/action`: IDE actions and commit-message insertion.
+- `src/main/kotlin/com/kozhun/commitmessagetemplate/service`: formatting, replacement, caret, whitespace, and Git logic.
 - `src/main/kotlin/com/kozhun/commitmessagetemplate/storage`: persistent settings state and storage.
 - `src/main/kotlin/com/kozhun/commitmessagetemplate/ui`: settings UI and editor components.
-- `src/main/kotlin/com/kozhun/commitmessagetemplate/language`: custom CMT language support, lexer/parser integration,
-  highlighting, completion, and file type.
-- `src/main/resources/META-INF/plugin.xml`: IntelliJ plugin registration, actions, extensions, dependencies, and
-  compatibility.
-- `src/main/gen`: generated Grammar-Kit/JFlex Java sources used by the CMT language implementation.
-- `src/test/kotlin`: JUnit 5 and MockK tests, mostly mirroring service packages.
+- `src/main/kotlin/com/kozhun/commitmessagetemplate/language`: CMT language, lexer/parser, highlighting, and completion.
+- `src/main/resources/META-INF/plugin.xml`: plugin dependencies, extensions, actions, and registration.
+- `src/main/gen`: generated Grammar-Kit/JFlex sources.
+- `src/test/kotlin`: JUnit 5 and MockK tests.
 
-## Toolchain
+## Toolchain and Compatibility
 
-- Use the checked-in Gradle wrapper: `./gradlew`.
-- Use JDK 21 to match CI and the Gradle Java toolchain.
-- The project compiles Java/Kotlin bytecode for JVM 17.
-- Kotlin plugin version is managed in `build.gradle.kts`.
-- IntelliJ Platform Gradle plugin targets IntelliJ IDEA Community `2023.3.8` with plugin compatibility configured in
-  `plugin.xml`/`build.gradle.kts`.
+- Use the checked-in Gradle wrapper, currently Gradle `9.8.2`.
+- Run Gradle and CI with JDK 21.
+- Compile Java/Kotlin bytecode for JVM 17.
+- Kotlin plugin `2.3.0` uses Kotlin API `1.9` for compatibility with the minimum IDE.
+- Compile against IntelliJ IDEA Community `2023.3.8`.
+- Supported platform range: `sinceBuild=233`, `untilBuild=262.*`.
+- Manage versions in `build.gradle.kts` and `gradle/wrapper/gradle-wrapper.properties`; do not duplicate version updates
+  in documentation without checking those sources.
 
 ## Common Commands
 
-Run the closest useful verification for the change:
+Run the narrowest useful verification for the change:
 
 ```bash
 ./gradlew test
-```
-
-```bash
 ./gradlew detekt
-```
-
-```bash
 ./gradlew assemble
 ```
 
-Full CI-equivalent local check:
+For build configuration or plugin distribution changes, run:
 
 ```bash
-./gradlew clean detekt test assemble --info
+./gradlew clean detekt test assemble buildPlugin verifyPluginProjectConfiguration verifyPluginStructure
 ```
 
-Run the plugin in a development IDE:
+Other useful tasks:
 
 ```bash
 ./gradlew runIde
-```
-
-Regenerate language sources after changing the grammar or lexer:
-
-```bash
 ./gradlew generateParser generateLexer
+./gradlew test --rerun-tasks
 ```
 
 ## Generated Sources
 
-- Treat `src/main/gen` as generated output.
-- Do not manually edit generated parser, lexer, PSI, or visitor files unless the user explicitly asks for an emergency
-  patch.
-- For language changes, edit:
-    - `src/main/kotlin/com/kozhun/commitmessagetemplate/language/grammar/CMT.bnf`
-    - `src/main/kotlin/com/kozhun/commitmessagetemplate/language/lexer/CMT.flex`
-- Then run `./gradlew generateParser generateLexer` and include the generated changes if behavior or APIs changed.
+- Treat `src/main/gen` as generated output; do not manually edit generated parser, lexer, PSI, or visitor files.
+- Edit `CMT.bnf` or `CMT.flex` for language changes, then run `./gradlew generateParser generateLexer`.
+- Include generated changes when behavior or generated APIs change.
 
-## Coding Standards
+## Implementation Rules
 
-- Follow the existing Kotlin style and package structure.
-- Keep code compatible with JVM 17.
-- Prefer IntelliJ Platform APIs and services already used in the project.
-- Register project-level services with `@Service(Service.Level.PROJECT)` and expose them through
-  `project.service<...>()` companion helpers when matching existing patterns.
-- Keep business logic in services; keep UI classes focused on UI composition and event wiring.
-- Avoid broad refactors while fixing focused issues.
-- Avoid introducing new dependencies unless they clearly reduce complexity and fit the plugin runtime.
-- Keep line length within the detekt limit of 160 characters.
-- Use meaningful names for template anchors, replacements, and settings fields; this project relies on clear variable
-  semantics.
-- Preserve existing public plugin IDs, action IDs, extension IDs, and settings storage names unless the user explicitly
-  requests a breaking migration.
-
-## IntelliJ Plugin Notes
-
-- `plugin.xml` is part of the runtime contract. Keep it in sync with implementation classes when renaming or moving
-  actions, configurables, file types, language extensions, or notification groups.
-- The plugin depends on `com.intellij.modules.platform` and `Git4Idea`; do not remove those dependencies without
-  verifying all Git-related services.
-- The default shortcut for inserting a pattern message is registered in `plugin.xml`; avoid changing it unless
-  requested.
-- Changes affecting persistent settings should consider migration through `SettingsMigrator` and compatibility with
-  existing user state.
+- Follow the existing Kotlin style, package structure, and service patterns; keep lines within the detekt limit of 160
+  characters.
+- Keep business logic in services and UI classes focused on composition and event wiring.
+- Prefer IntelliJ Platform APIs already used by the project. Avoid new dependencies unless they clearly reduce
+  complexity and fit the plugin runtime.
+- Register project services with `@Service(Service.Level.PROJECT)` and use the existing `project.service<...>()` pattern.
+- Do not retain or asynchronously query `AnActionEvent` after `actionPerformed`; capture required data first. Update
+  editors and Swing components on EDT.
+- Keep `plugin.xml` synchronized with actions, configurables, file types, language extensions, and notification groups.
+- Preserve public plugin IDs, action IDs, extension IDs, shortcut registrations, and settings storage names unless a
+  breaking migration is explicitly requested.
+- Do not remove the `com.intellij.modules.platform` or `Git4Idea` dependencies without verifying all Git functionality.
+- Consider `SettingsMigrator` and existing user state when changing persistent settings.
+- Avoid broad refactors while implementing focused changes.
 
 ## Tests
 
 - Add or update tests for behavioral changes in services, replacement logic, whitespace formatting, caret handling, and
   branch parsing.
-- Use JUnit 5 assertions and MockK, following the existing tests.
-- Prefer focused unit tests over full IDE integration tests unless the change depends on IntelliJ runtime behavior.
-- When changing formatting or replacement behavior, test both value-present and value-missing cases.
-- When changing generated language behavior, run parser/lexer generation and at least `./gradlew test`.
+- Use JUnit 5 assertions and MockK, following existing test conventions.
+- Prefer focused unit tests unless the behavior depends on the IntelliJ runtime.
+- Test both value-present and value-missing cases for formatting and replacements.
+- For generated language changes, regenerate sources and run at least `./gradlew test`.
 
-## Commit, Changelog, and Release
+## Documentation, Commits, and Release
 
-- Commit messages must follow Conventional Commits.
-- `.commitlintrc.yml` extends `@commitlint/config-conventional`.
-- `DEVELOPMENT.md` mentions Husky and npm setup for commit hooks, but this repository snapshot does not currently
-  contain `package.json` or `.husky`; do not assume npm commands are available unless those files are added.
-- The changelog is managed by Gradle/GitHub workflows. Do not manually edit `CHANGELOG.md` for routine code changes
-  unless the user asks.
+- Write public documentation, issues, and PR descriptions in English.
+- Keep `README.md` user-focused, `DEVELOPMENT.md` contributor-focused, and this file focused on agent instructions.
+  Update documentation when behavior, compatibility, commands, or workflows change.
+- Use Conventional Commits; `.commitlintrc.yml` extends `@commitlint/config-conventional`.
+- The repository has no `package.json` or Husky hooks. Do not assume npm commands are available.
+- `CHANGELOG.md` is managed through the Gradle changelog plugin and release workflow. Do not edit it for routine
+  changes unless requested.
 
 ## Agent Workflow
 
-- Read relevant files before editing; prefer `rg` and `rg --files` for discovery.
-- Check `git status --short` before making edits and do not overwrite unrelated user changes.
-- Keep edits scoped to the requested behavior.
-- Use `apply_patch` for manual file edits.
-- Do not run destructive commands such as `git reset --hard`, `git checkout --`, or broad file deletion unless the user
-  explicitly requests them.
-- After changes, run the narrowest meaningful Gradle task. If a verification command cannot run, report the exact
-  command and why.
-- In final responses, summarize changed files and verification performed.
-
+- Read relevant files and check `git status --short` before editing. Do not overwrite unrelated user changes.
+- Keep edits scoped to the request and review the final diff.
+- Do not run destructive Git commands or broad file deletion without explicit user authorization.
+- Run meaningful verification on the final deliverable. If a command cannot run, report the exact command and reason.
+- Do not commit generated build output, IDE sandbox data, credentials, or session files.
+- In the final response, summarize changed files, verification, and any remaining limitations.
