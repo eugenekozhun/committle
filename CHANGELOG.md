@@ -6,6 +6,9 @@
 
 ### Changed
 
+- Updated IntelliJ Platform Gradle Plugin to **2.19.0** and Gradle wrapper to **9.8.2**.
+- Raised the minimum supported IDE version to **2023.3** (build **233**) and aligned Kotlin API compatibility to **1.9**.
+
 ### Deprecated
 
 ### Removed
