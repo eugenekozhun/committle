@@ -32,7 +32,7 @@ Important project areas:
 - Use JDK 21 to match CI and the Gradle Java toolchain.
 - The project compiles Java/Kotlin bytecode for JVM 17.
 - Kotlin plugin version is managed in `build.gradle.kts`.
-- IntelliJ Platform Gradle plugin targets IntelliJ IDEA Community `2023.1.5` with plugin compatibility configured in
+- IntelliJ Platform Gradle plugin targets IntelliJ IDEA Community `2023.3.8` with plugin compatibility configured in
   `plugin.xml`/`build.gradle.kts`.
 
 ## Common Commands
