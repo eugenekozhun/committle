@@ -9,7 +9,7 @@ val kotlinxSerializationJson = "1.8.0"
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.3.0"
-    id("org.jetbrains.intellij.platform") version "2.11.0"
+    id("org.jetbrains.intellij.platform") version "2.19.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.grammarkit") version "2023.3.0.1"
     id("org.jetbrains.changelog") version "2.5.0"
@@ -41,7 +41,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity("2023.1.5")
+        intellijIdeaCommunity("2023.3.8")
         bundledPlugin("Git4Idea")
         testFramework(TestFrameworkType.Platform)
     }
@@ -65,7 +65,7 @@ intellijPlatform {
         version.set(project.version.toString())
 
         ideaVersion {
-            sinceBuild.set("231")
+            sinceBuild.set("233")
             untilBuild.set("262.*")
         }
 
@@ -107,7 +107,7 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
         }
     }
 
