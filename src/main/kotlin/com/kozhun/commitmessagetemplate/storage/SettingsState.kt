@@ -153,3 +153,21 @@ fun SettingsState.toExportableSettings(): ExportableSettings {
         scopePostprocessor = scopePostprocessor
     )
 }
+
+fun SettingsState.copyFrom(source: SettingsState) {
+    pattern = source.pattern
+    trimWhitespacesStart = source.trimWhitespacesStart
+    trimWhitespacesEnd = source.trimWhitespacesEnd
+    unnecessaryWhitespaces = source.unnecessaryWhitespaces
+    taskIdRegex = source.taskIdRegex
+    taskIdDefault = source.taskIdDefault
+    taskIdPostProcessor = source.taskIdPostProcessor
+    typeRegex = source.typeRegex
+    typeDefault = source.typeDefault
+    typeSynonyms = source.typeSynonyms.toMutableMap()
+    typePostprocessor = source.typePostprocessor
+    scopeRegex = source.scopeRegex
+    scopeDefault = source.scopeDefault
+    scopeSeparator = source.scopeSeparator
+    scopePostprocessor = source.scopePostprocessor
+}

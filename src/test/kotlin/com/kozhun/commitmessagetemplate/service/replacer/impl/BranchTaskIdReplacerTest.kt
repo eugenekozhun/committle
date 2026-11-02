@@ -13,7 +13,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -26,7 +26,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -39,7 +39,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -52,7 +52,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -65,7 +65,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -78,7 +78,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("CMT-000", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -91,7 +91,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals(TASK_ID, replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -104,7 +104,7 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -117,9 +117,22 @@ class BranchTaskIdReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTaskIdReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals(CUSTOM_TASK_ID, replacement.value)
+        assertEquals(true, replacement.hasValue)
+    }
+
+    @Test
+    fun `replace with default task-id when branch is unavailable`() {
+        mockSettingState(taskIdDefault = TASK_ID)
+        mockBranchUnavailable()
+
+        val replacer = BranchTaskIdReplacer(projectMock)
+
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
+
+        assertEquals(TASK_ID, replacement.value)
         assertEquals(true, replacement.hasValue)
     }
 

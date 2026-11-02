@@ -41,9 +41,9 @@ class CommitMessageFormatterDefaultImplTest : BaseReplacerTest() {
         every { branchTaskIdReplacer.anchor } returns "\$TASK_ID"
         every { filePathScopeReplacer.anchor } returns "\$SCOPE"
 
-        coEvery { branchTypeReplacer.getReplacement(anActionEventMock) } returns Replacement("feature", true)
-        coEvery { branchTaskIdReplacer.getReplacement(anActionEventMock) } returns Replacement("", false)
-        coEvery { filePathScopeReplacer.getReplacement(anActionEventMock) } returns Replacement("scope", true)
+        coEvery { branchTypeReplacer.getReplacement(generationContext) } returns Replacement("feature", true)
+        coEvery { branchTaskIdReplacer.getReplacement(generationContext) } returns Replacement("", false)
+        coEvery { filePathScopeReplacer.getReplacement(generationContext) } returns Replacement("scope", true)
 
         var templateBeforeWhitespace: String? = null
         every { whitespaceService.format(any()) } answers {
@@ -53,7 +53,7 @@ class CommitMessageFormatterDefaultImplTest : BaseReplacerTest() {
 
         val formatter = CommitMessageFormatterDefaultImpl(projectMock)
 
-        val result = runBlocking { formatter.getFormattedCommitMessage(anActionEventMock) }
+        val result = runBlocking { formatter.getFormattedCommitMessage(generationContext) }
 
         assertEquals("feature  scope", templateBeforeWhitespace)
         assertEquals("feature  scope", result)

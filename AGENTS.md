@@ -97,8 +97,10 @@ Other useful tasks:
   Update documentation when behavior, compatibility, commands, or workflows change.
 - Use Conventional Commits; `.commitlintrc.yml` extends `@commitlint/config-conventional`.
 - The repository has no `package.json` or Husky hooks. Do not assume npm commands are available.
-- `CHANGELOG.md` is managed through the Gradle changelog plugin and release workflow. Do not edit it for routine
-  changes unless requested.
+- Update `CHANGELOG.md` under `## Unreleased` whenever plugin behavior, compatibility, supported IDE/Kotlin/Gradle or
+  IntelliJ tooling, persistent settings, APIs, or user workflows change. Do not add entries for infrastructure-only
+  changes that do not affect the plugin. The Gradle changelog plugin and release workflow still manage release sections;
+  do not edit released versions manually.
 
 ## Agent Workflow
 

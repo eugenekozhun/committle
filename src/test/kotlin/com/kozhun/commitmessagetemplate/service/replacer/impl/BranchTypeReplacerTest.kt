@@ -13,7 +13,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -26,7 +26,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -39,7 +39,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -52,7 +52,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -66,7 +66,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals(TYPE_DEFAULT, replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -79,7 +79,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals(TYPE, replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -93,7 +93,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -106,7 +106,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals(CUSTOM_TYPE, replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -119,7 +119,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("feat", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -132,7 +132,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("FEAT", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -145,7 +145,7 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("Feat", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -158,9 +158,22 @@ class BranchTypeReplacerTest : BaseReplacerTest() {
 
         val replacer = BranchTypeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals(TYPE, replacement.value)
+        assertEquals(true, replacement.hasValue)
+    }
+
+    @Test
+    fun `replace with default type when branch is unavailable`() {
+        mockSettingState(typeDefault = TYPE_DEFAULT)
+        mockBranchUnavailable()
+
+        val replacer = BranchTypeReplacer(projectMock)
+
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
+
+        assertEquals(TYPE_DEFAULT, replacement.value)
         assertEquals(true, replacement.hasValue)
     }
 
