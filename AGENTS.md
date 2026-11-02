@@ -10,7 +10,7 @@ files under that directory.
 ## Project Overview
 
 Committle is a JetBrains IDE plugin written in Kotlin. It generates commit messages from configurable templates and
-variables such as `$TASK_ID`, `$TYPE`, `$SCOPE`, and `$CARET_POSITION`.
+variables such as `$TASK_ID`, `$TYPE`, `$SCOPE`, `$BREAKING_CHANGE`, and `$CARET_POSITION`.
 
 Key project areas:
 

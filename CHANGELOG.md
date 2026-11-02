@@ -4,6 +4,9 @@
 
 ### Added
 
+- Added the `$BREAKING_CHANGE` template variable and a dedicated insertion action for marking individual Conventional
+  Commits with `!`.
+
 ### Changed
 
 - Updated IntelliJ Platform Gradle Plugin to **2.19.0** and Gradle wrapper to **9.8.2**.

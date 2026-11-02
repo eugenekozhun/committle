@@ -21,7 +21,8 @@ class CMTSyntaxHighlighter : SyntaxHighlighterBase() {
         return when (tokenType) {
             CMTTypes.TASK_ID,
             CMTTypes.TYPE,
-            CMTTypes.SCOPE -> KEYWORD_KEYS
+            CMTTypes.SCOPE,
+            CMTTypes.BREAKING_CHANGE -> KEYWORD_KEYS
 
             CMTTypes.CARET_POSITION -> CARET_KEYS
 

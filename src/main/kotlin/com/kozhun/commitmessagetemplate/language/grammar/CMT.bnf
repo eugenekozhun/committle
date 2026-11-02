@@ -11,18 +11,19 @@
   elementTypeClass="com.kozhun.commitmessagetemplate.language.grammar.CMTElementType"
   tokenTypeClass="com.kozhun.commitmessagetemplate.language.grammar.CMTTokenType"
 
-  methods("task_id|type|scope|caret_position")=[getName]
+  methods("task_id|type|scope|breaking_change|caret_position")=[getName]
 }
 
 cmtFile ::= content_
 
 private content_ ::= item_*
 private item_ ::= variable_ | plain_text
-private variable_ ::= (task_id | type | scope | caret_position)
+private variable_ ::= (task_id | type | scope | breaking_change | caret_position)
 
 task_id ::= '$TASK_ID'
 type ::= '$TYPE'
 scope ::= '$SCOPE'
+breaking_change ::= '$BREAKING_CHANGE'
 caret_position ::= '$CARET_POSITION'
 
 plain_text ::= OTHER_TEXT+

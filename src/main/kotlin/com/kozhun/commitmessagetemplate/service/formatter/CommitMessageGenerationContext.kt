@@ -14,6 +14,7 @@ data class CommitMessageGenerationContext(
     val changes: List<Change> = emptyList(),
     val affectedPaths: List<String> = emptyList(),
     val repository: GitRepository? = null,
+    val isBreakingChange: Boolean = false,
 ) {
     val currentBranchName: String?
         get() = repository?.currentBranch?.name

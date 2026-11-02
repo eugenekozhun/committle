@@ -19,8 +19,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GenerateCommitMessageAction : DumbAwareAction() {
-    private val logger = Logger.getInstance(GenerateCommitMessageAction::class.java)
+abstract class BaseGenerateCommitMessageAction(
+    private val isBreakingChange: Boolean
+) : DumbAwareAction() {
+    private val logger = Logger.getInstance(javaClass)
 
     init {
         isEnabledInModalContext = true
@@ -31,7 +33,7 @@ class GenerateCommitMessageAction : DumbAwareAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val commitMessage = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as? CommitMessage ?: return
-        val context = CommitMessageGenerationContext.from(e, project)
+        val context = CommitMessageGenerationContext.from(e, project).copy(isBreakingChange = isBreakingChange)
         val scope = CoroutineScopeService.getInstance(project).coroutineScope
 
         scope.launch {
@@ -69,4 +71,6 @@ class GenerateCommitMessageAction : DumbAwareAction() {
         }
     }
 }
+
+class GenerateCommitMessageAction : BaseGenerateCommitMessageAction(isBreakingChange = false)
 

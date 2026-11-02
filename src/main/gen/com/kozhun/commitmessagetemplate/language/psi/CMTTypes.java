@@ -10,6 +10,7 @@ import com.kozhun.commitmessagetemplate.language.psi.impl.*;
 
 public interface CMTTypes {
 
+  IElementType BREAKING_CHANGE = new CMTElementType("BREAKING_CHANGE");
   IElementType CARET_POSITION = new CMTElementType("CARET_POSITION");
   IElementType PLAIN_TEXT = new CMTElementType("PLAIN_TEXT");
   IElementType SCOPE = new CMTElementType("SCOPE");
@@ -21,7 +22,10 @@ public interface CMTTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == CARET_POSITION) {
+      if (type == BREAKING_CHANGE) {
+        return new CMTBreakingChangeImpl(node);
+      }
+      else if (type == CARET_POSITION) {
         return new CMTCaretPositionImpl(node);
       }
       else if (type == PLAIN_TEXT) {

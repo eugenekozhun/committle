@@ -39,6 +39,7 @@
 | **Reusable templates** | Generate commit messages from a project-specific template instead of writing the same structure repeatedly. |
 | **Branch-based variables** | Extract a task ID and commit type from the current Git branch using configurable regular expressions. |
 | **File-based scopes** | Build scopes from paths of the changes selected for commit. |
+| **Breaking changes** | Mark an individual Conventional Commit with `!` using a dedicated insertion action. |
 | **Defaults and postprocessing** | Configure fallback values, separators, type synonyms, and case transformations. |
 | **Whitespace and caret control** | Clean up formatting and place the cursor exactly where the next part of the message should be entered. |
 | **Template completion** | Use completion and syntax highlighting in the dedicated template editor. |
@@ -57,13 +58,14 @@ your IDE and:
 
 1. Open **Settings/Preferences → Version Control → Committle**.
 2. Define a commit message template.
-3. Open the commit dialog and click **Insert Pattern Message**, or use the default shortcut **Ctrl+Shift+T**.
+3. Open the commit dialog and click **Insert Pattern Message**, or use the default shortcut **Ctrl+Shift+T**. For a
+   breaking change, click **Insert Breaking Change Pattern Message** instead.
 4. Complete the generated message and commit your changes.
 
 ### Template
 
 ```text
-$TYPE($SCOPE): $CARET_POSITION
+$TYPE($SCOPE)$BREAKING_CHANGE: $CARET_POSITION
 
 Closes $TASK_ID
 ```
@@ -83,6 +85,7 @@ Closes CMT-123
 | `$TASK_ID` | A match extracted from the current branch name | `CMT-123` |
 | `$TYPE` | A commit type extracted from the current branch name | `feat`, `fix`, `docs` |
 | `$SCOPE` | Matches extracted from paths of changes selected for commit | `ui`, `api`, `core` |
+| `$BREAKING_CHANGE` | The insertion action selected in the commit dialog | `!` for a breaking change; empty otherwise |
 | `$CARET_POSITION` | The desired cursor position after the message is inserted | Not included in the final text |
 
 Each extracted value can have a configurable regular expression, default fallback, and case postprocessing. Type
@@ -99,6 +102,20 @@ also maintain a table of synonyms.
 
 Configure a path-matching regex, a fallback scope, case transformation, and a separator for multiple distinct scopes.
 Committle uses the changes selected in the commit dialog when they are available.
+
+### Breaking changes
+
+Place `$BREAKING_CHANGE` immediately before the colon in a Conventional Commits template. **Insert Pattern Message**
+replaces it with an empty string, while **Insert Breaking Change Pattern Message** replaces it with `!`:
+
+```text
+feat(ui): Improve login flow
+feat(ui)!: Remove support for the legacy login flow
+```
+
+The `!` marker is sufficient under the Conventional Commits specification. You can additionally add a
+`BREAKING CHANGE: <description>` footer to the final message when needed. You can assign a custom shortcut to the
+breaking-change action in the IDE keymap settings.
 
 ### Whitespace and caret
 
