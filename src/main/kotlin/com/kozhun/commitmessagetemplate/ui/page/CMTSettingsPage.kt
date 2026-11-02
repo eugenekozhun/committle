@@ -22,6 +22,7 @@ import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_SCOPE_SE
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TASK_ID_REGEX
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TYPE_REGEX
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.settings.SettingsDraft
 import com.kozhun.commitmessagetemplate.service.settings.SettingsExporter
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import com.kozhun.commitmessagetemplate.ui.components.PatternEditorBuilder
@@ -30,6 +31,7 @@ import com.kozhun.commitmessagetemplate.ui.model.SynonymColumnInfo
 import com.kozhun.commitmessagetemplate.ui.model.SynonymPair
 import com.kozhun.commitmessagetemplate.ui.util.bindNullableText
 import com.kozhun.commitmessagetemplate.ui.util.showCommittleNotification
+import com.kozhun.commitmessagetemplate.ui.util.validateRegex
 import java.util.ResourceBundle
 import javax.swing.JComponent
 import javax.swing.ListSelectionModel
@@ -40,6 +42,8 @@ class CMTSettingsPage(
 ) : ConfigurableWithId {
     private val settingsStorage = SettingsStorage.getInstance(project)
     private val settingsExporter = SettingsExporter.getInstance(project)
+    private val settingsDraft = SettingsDraft(settingsStorage)
+    private val draftState = settingsDraft.state
 
     private lateinit var panel: DialogPanel
 
@@ -51,7 +55,7 @@ class CMTSettingsPage(
             SynonymColumnInfo(resourceBundle.getString("settings.table.value")) { it.key },
             SynonymColumnInfo(resourceBundle.getString("settings.table.synonym")) { it.value }
         ),
-        getSynonymsMapFromStorage()
+        getSynonymsMapFromDraft()
     )
 
     private val table = TableView(tableModel).apply {
@@ -66,9 +70,9 @@ class CMTSettingsPage(
                 button(resourceBundle.getString("settings.import-settings")) {
                     val importState = settingsExporter.import() ?: return@button
 
-                    settingsStorage.loadState(importState)
+                    settingsDraft.loadFrom(importState)
 
-                    reset()
+                    resetUi()
                     project.showCommittleNotification(
                         resourceBundle.getString("settings.import.success"),
                         NotificationType.INFORMATION
@@ -84,16 +88,16 @@ class CMTSettingsPage(
                     .bind(
                         { _ -> patternEditor.document.text.ifBlank { null } },
                         { _, value: String? -> runWriteAction { patternEditor.document.setText(value.orEmpty()) } },
-                        MutableProperty({ settingsStorage.state.pattern }, { newValue -> runWriteAction { settingsStorage.state.pattern = newValue } })
+                        MutableProperty({ draftState.pattern }, { newValue -> runWriteAction { draftState.pattern = newValue } })
                     )
             }
             row {
                 checkBox(resourceBundle.getString("settings.trim-whitespaces-start"))
-                    .bindSelected(settingsStorage.state::trimWhitespacesStart)
+                    .bindSelected(draftState::trimWhitespacesStart)
                 checkBox(resourceBundle.getString("settings.trim-whitespaces-end"))
-                    .bindSelected(settingsStorage.state::trimWhitespacesEnd)
+                    .bindSelected(draftState::trimWhitespacesEnd)
                 checkBox(resourceBundle.getString("settings.duplicated-whitespaces"))
-                    .bindSelected(settingsStorage.state::unnecessaryWhitespaces)
+                    .bindSelected(draftState::unnecessaryWhitespaces)
                 val patternHelp = listOf(
                     resourceBundle.getString("settings.message-pattern-notes.task-id"),
                     resourceBundle.getString("settings.message-pattern-notes.type"),
@@ -110,7 +114,8 @@ class CMTSettingsPage(
                             .comment(comment = resourceBundle.getString("settings.advanced.task-id.regex.comment").format(DEFAULT_TASK_ID_REGEX))
                             .align(AlignX.FILL)
                             .resizableColumn()
-                            .bindNullableText(settingsStorage.state::taskIdRegex)
+                            .bindNullableText(draftState::taskIdRegex)
+                            .validationOnApply { validateRegex(it) }
                         cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.current-branch"))).align(AlignX.RIGHT)
                     }
                     row {
@@ -118,13 +123,13 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.task-id.default.value"), LabelPosition.TOP)
                             .comment(resourceBundle.getString("settings.advanced.task-id.default.comment"))
                             .align(AlignX.FILL)
-                            .bindNullableText(settingsStorage.state::taskIdDefault)
+                            .bindNullableText(draftState::taskIdDefault)
                         comboBox(StringCase.values().map { it.label })
                             .label(resourceBundle.getString("settings.advanced.common.postprocess"), LabelPosition.TOP)
-                            .bindItem(settingsStorage.state::taskIdPostProcessor)
+                            .bindItem(draftState::taskIdPostProcessor)
                     }
                 }.apply {
-                    expanded = !settingsStorage.state.isDefaultTaskFields()
+                    expanded = !draftState.isDefaultTaskFields()
                 }.withoutGaps()
                 collapsibleGroup(resourceBundle.getString("settings.advanced.type.title")) {
                     row {
@@ -133,7 +138,8 @@ class CMTSettingsPage(
                             .comment(comment = resourceBundle.getString("settings.advanced.type.regex.comment").format(DEFAULT_TYPE_REGEX))
                             .align(AlignX.FILL)
                             .resizableColumn()
-                            .bindNullableText(settingsStorage.state::typeRegex)
+                            .bindNullableText(draftState::typeRegex)
+                            .validationOnApply { validateRegex(it) }
                         cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.current-branch"))).align(AlignX.RIGHT)
                     }
                     row {
@@ -141,10 +147,10 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.type.default-type.value"), LabelPosition.TOP)
                             .comment(resourceBundle.getString("settings.advanced.type.default-type.comment"))
                             .align(AlignX.FILL)
-                            .bindNullableText(settingsStorage.state::typeDefault)
+                            .bindNullableText(draftState::typeDefault)
                         comboBox(StringCase.values().map { it.label }, null)
                             .label(resourceBundle.getString("settings.advanced.common.postprocess"), LabelPosition.TOP)
-                            .bindItem(settingsStorage.state::typePostprocessor)
+                            .bindItem(draftState::typePostprocessor)
                     }
                     group(resourceBundle.getString("settings.advanced.type.synonyms"), indent = false) {
                         row {
@@ -152,7 +158,7 @@ class CMTSettingsPage(
                         }.resizableRow()
                     }.withoutGaps()
                 }.apply {
-                    expanded = !settingsStorage.state.isDefaultTypeFields() || settingsStorage.state.typeSynonyms.isNotEmpty()
+                    expanded = !draftState.isDefaultTypeFields() || draftState.typeSynonyms.isNotEmpty()
                 }.withoutGaps()
                 collapsibleGroup(resourceBundle.getString("settings.advanced.scope.title")) {
                     row {
@@ -160,7 +166,8 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.common.label"), LabelPosition.TOP)
                             .align(AlignX.FILL)
                             .resizableColumn()
-                            .bindNullableText(settingsStorage.state::scopeRegex)
+                            .bindNullableText(draftState::scopeRegex)
+                            .validationOnApply { validateRegex(it) }
                         cell(ContextHelpLabel.create(resourceBundle.getString("settings.help.file-path"))).align(AlignX.RIGHT)
                     }
                     row {
@@ -168,18 +175,18 @@ class CMTSettingsPage(
                             .label(resourceBundle.getString("settings.advanced.scope.default-value"), LabelPosition.TOP)
                             .comment(resourceBundle.getString("settings.advanced.scope.default.comment"))
                             .align(AlignX.FILL)
-                            .bindNullableText(settingsStorage.state::scopeDefault)
+                            .bindNullableText(draftState::scopeDefault)
                         textField()
                             .label(resourceBundle.getString("settings.advanced.common.separator"), LabelPosition.TOP)
                             .comment(comment = resourceBundle.getString("settings.advanced.scope.separator.comment").format(DEFAULT_SCOPE_SEPARATOR))
                             .align(AlignX.FILL)
-                            .bindNullableText(settingsStorage.state::scopeSeparator)
+                            .bindNullableText(draftState::scopeSeparator)
                         comboBox(StringCase.values().map { it.label })
                             .label(resourceBundle.getString("settings.advanced.common.postprocess"), LabelPosition.TOP)
-                            .bindItem(settingsStorage.state::scopePostprocessor)
+                            .bindItem(draftState::scopePostprocessor)
                     }
                 }.apply {
-                    expanded = !settingsStorage.state.isDefaultScopeFields()
+                    expanded = !draftState.isDefaultScopeFields()
                 }.withoutGaps()
             }
         }
@@ -188,23 +195,29 @@ class CMTSettingsPage(
     }
 
     override fun isModified(): Boolean {
-        return panel.isModified() || settingsStorage.state.typeSynonyms != getSynonymsMapFromTable()
+        return panel.isModified() || settingsDraft.isModified() || draftState.typeSynonyms != getSynonymsMapFromTable()
     }
 
     override fun apply() {
         panel.apply()
-        settingsStorage.state.typeSynonyms = getSynonymsMapFromTable().toMutableMap()
+        draftState.typeSynonyms = getSynonymsMapFromTable().toMutableMap()
+        settingsDraft.apply()
     }
 
     override fun reset() {
+        settingsDraft.reset()
+        resetUi()
+    }
+
+    private fun resetUi() {
         panel.reset()
         tableModel.apply {
-            items = getSynonymsMapFromStorage()
+            items = getSynonymsMapFromDraft()
             fireTableDataChanged()
         }
     }
 
-    private fun getSynonymsMapFromStorage() = settingsStorage.state.typeSynonyms
+    private fun getSynonymsMapFromDraft() = draftState.typeSynonyms
         .map { SynonymPair(it.key, it.value) }
         .toMutableList()
 

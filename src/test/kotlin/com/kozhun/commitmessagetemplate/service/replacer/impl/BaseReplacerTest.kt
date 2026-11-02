@@ -1,23 +1,21 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.enums.StringCase
-import com.kozhun.commitmessagetemplate.service.git.branch.GitBranchService
-import com.kozhun.commitmessagetemplate.service.git.branch.impl.GitBranchServiceImpl
+import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageGenerationContext
 import com.kozhun.commitmessagetemplate.storage.SettingsState
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
 import git4idea.GitLocalBranch
+import git4idea.repo.GitRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 
 abstract class BaseReplacerTest {
     protected var projectMock = mockk<Project>()
-    protected var anActionEventMock = mockk<AnActionEvent>()
+    protected var generationContext = CommitMessageGenerationContext()
 
     @AfterEach
     fun tearDown() {
@@ -25,18 +23,17 @@ abstract class BaseReplacerTest {
     }
 
     protected fun mockBranchName(branchName: String) {
-        mockkStatic(GitBranchServiceImpl::class)
+        val gitBranchMock = mockk<GitLocalBranch>()
+        val repositoryMock = mockk<GitRepository>()
 
-        val gitBranchServiceMock = mockk<GitBranchService>()
-        val gitLocalBranchMock = mockk<GitLocalBranch>()
+        every { gitBranchMock.name } returns branchName
+        every { repositoryMock.currentBranch } returns gitBranchMock
 
-        every { gitLocalBranchMock.name } returns branchName
-        every {
-            runBlocking {
-                gitBranchServiceMock.getCurrentBranch(anActionEventMock)
-            }
-        } returns gitLocalBranchMock
-        every { GitBranchServiceImpl.getInstance(projectMock) } returns gitBranchServiceMock
+        generationContext = generationContext.copy(repository = repositoryMock)
+    }
+
+    protected fun mockBranchUnavailable() {
+        generationContext = generationContext.copy(repository = null)
     }
 
     @Suppress("LongParameterList")

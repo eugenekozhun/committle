@@ -1,12 +1,11 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.constants.DefaultValues.DEFAULT_TYPE_REGEX
 import com.kozhun.commitmessagetemplate.enums.StringCase
-import com.kozhun.commitmessagetemplate.service.git.branch.impl.GitBranchServiceImpl
+import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageGenerationContext
 import com.kozhun.commitmessagetemplate.service.replacer.Replacement
 import com.kozhun.commitmessagetemplate.service.replacer.Replacer
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
@@ -18,19 +17,18 @@ class BranchTypeReplacer(
     project: Project
 ) : Replacer {
     private val settingsStorage = SettingsStorage.getInstance(project)
-    private val getBranchService = GitBranchServiceImpl.getInstance(project)
 
     override val anchor = "\$TYPE"
 
-    override suspend fun getReplacement(anActionEvent: AnActionEvent): Replacement {
-        val type = changeCase(replaceWithSynonym(getTypeFromCurrentBranch(anActionEvent)))
+    override suspend fun getReplacement(context: CommitMessageGenerationContext): Replacement {
+        val type = changeCase(replaceWithSynonym(getTypeFromCurrentBranch(context)))
 
         return Replacement(type, type.isNotBlank())
     }
 
-    private suspend fun getTypeFromCurrentBranch(anActionEvent: AnActionEvent): String {
-        return getBranchService.getCurrentBranch(anActionEvent).name
-            .let { getTypeRegex().find(it)?.value }
+    private fun getTypeFromCurrentBranch(context: CommitMessageGenerationContext): String {
+        return context.currentBranchName
+            ?.let { getTypeRegex().find(it)?.value }
             ?: getDefaultTypeValue()
     }
 

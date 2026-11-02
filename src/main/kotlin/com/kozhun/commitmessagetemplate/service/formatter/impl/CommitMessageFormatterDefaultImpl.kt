@@ -1,10 +1,10 @@
 package com.kozhun.commitmessagetemplate.service.formatter.impl
 
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageFormatter
+import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageGenerationContext
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTaskIdReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTypeReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.FilePathScopeReplacer
@@ -24,7 +24,7 @@ class CommitMessageFormatterDefaultImpl(
         FilePathScopeReplacer.getInstance(project)
     )
 
-    override suspend fun getFormattedCommitMessage(anActionEvent: AnActionEvent): String {
+    override suspend fun getFormattedCommitMessage(context: CommitMessageGenerationContext): String {
         val pattern = projectStorage.state.pattern.orEmpty()
         val activeReplacers = replacers.filter { pattern.contains(it.anchor) }
 
@@ -32,7 +32,7 @@ class CommitMessageFormatterDefaultImpl(
             return whitespaceService.format(pattern)
         }
 
-        val replacements = activeReplacers.associate { it.anchor to it.getReplacement(anActionEvent) }
+        val replacements = activeReplacers.associate { it.anchor to it.getReplacement(context) }
         val anchorRegex = replacements.keys
             .joinToString("|") { Regex.escape(it) }
             .toRegex()

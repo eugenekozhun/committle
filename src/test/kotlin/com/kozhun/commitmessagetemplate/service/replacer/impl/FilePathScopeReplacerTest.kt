@@ -1,19 +1,14 @@
 package com.kozhun.commitmessagetemplate.service.replacer.impl
 
-import com.intellij.openapi.vcs.CheckinProjectPanel
-import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
-import com.intellij.openapi.vcs.changes.ChangeListManager
-import com.intellij.openapi.vcs.ui.Refreshable
 import com.intellij.openapi.vfs.VirtualFile
 import com.kozhun.commitmessagetemplate.enums.StringCase
+import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageGenerationContext
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class FilePathScopeReplacerTest : BaseReplacerTest() {
     @Test
@@ -23,7 +18,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         mockBranchName(BRANCH_WITHOUT_TYPE_ID)
 
         val replacer = FilePathScopeReplacer(projectMock)
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("", replacement.value)
         assertEquals(false, replacement.hasValue)
@@ -39,7 +34,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("cmt", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -62,7 +57,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("cmt", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -85,7 +80,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("project", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -108,7 +103,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("test|project", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -132,7 +127,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("test,project", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -155,7 +150,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("TEST|PROJECT", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -176,7 +171,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("project|test", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -197,7 +192,7 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
 
         val replacer = FilePathScopeReplacer(projectMock)
 
-        val replacement = runBlocking { replacer.getReplacement(anActionEventMock) }
+        val replacement = runBlocking { replacer.getReplacement(generationContext) }
 
         assertEquals("project|test", replacement.value)
         assertEquals(true, replacement.hasValue)
@@ -207,24 +202,10 @@ class FilePathScopeReplacerTest : BaseReplacerTest() {
         includedPaths: Array<String> = emptyArray(),
         affectedPaths: Array<String> = emptyArray(),
     ) {
-        mockkStatic(ChangeListManager::class)
-
-        val changeListManagerMock = mockk<ChangeListManager>()
-        val filePaths = affectedPaths.map { path ->
-            val fileMock = mockk<File>()
-            every { fileMock.path } returns path
-            fileMock
-        }
-
-        every { changeListManagerMock.affectedPaths } returns filePaths
-        every { ChangeListManager.getInstance(projectMock) } returns changeListManagerMock
-
-        val includedChanges = mockChanges(includedPaths).toList()
-        val panelMock = mockk<CheckinProjectPanel>()
-
-        every { panelMock.selectedChanges } returns includedChanges
-        every { anActionEventMock.getData(Refreshable.PANEL_KEY) } returns panelMock
-        every { anActionEventMock.getData(VcsDataKeys.CHANGES) } returns includedChanges.toTypedArray()
+        generationContext = CommitMessageGenerationContext(
+            changes = mockChanges(includedPaths).toList(),
+            affectedPaths = affectedPaths.toList()
+        )
     }
 
     private fun mockChanges(paths: Array<String>): Array<Change> {
