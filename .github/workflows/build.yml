@@ -51,6 +51,7 @@ jobs:
           name: E2E Tests
           path: build/test-results/integrationTest/TEST-*.xml
           reporter: java-junit
+          use-actions-summary: 'false'
 
       - name: Upload end-to-end test artifacts
         if: always()
