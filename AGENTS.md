@@ -92,7 +92,7 @@ Other useful tasks:
 - Keep E2E automation cross-platform: use Driver remote APIs instead of native input, OS window checks, or OS-specific
   branches. On Linux, Starter manages Xvfb; `E2E_IDE_PATH` may point to an existing IDE on any OS.
 - E2E failure diagnostics are in `build/test-results/integrationTest`, `build/reports/tests/integrationTest`, and
-  `out/ide-tests`.
+  `out/ide-tests`. CI publishes the HTML report and screenshots to GitHub Pages; keep IDE logs only in the artifact.
 - Test both value-present and value-missing cases for formatting and replacements.
 - For generated language changes, regenerate sources and run at least `./gradlew test`.
 

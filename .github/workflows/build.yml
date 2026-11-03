@@ -53,3 +53,77 @@ jobs:
             out/ide-tests/tests/**/reports/
           if-no-files-found: warn
           retention-days: 7
+
+  e2e-report:
+    needs: e2e
+    if: ${{ always() && needs.e2e.result != 'cancelled' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      issues: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: e2e-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download end-to-end test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: e2e-test-artifacts
+          path: build/e2e-report-input
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare HTML report and screenshot gallery
+        env:
+          E2E_RESULT: ${{ needs.e2e.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: >-
+          python3 .github/scripts/prepare_e2e_report.py
+          --input build/e2e-report-input
+          --output _site
+          --result "$E2E_RESULT"
+          --run-url "$RUN_URL"
+
+      - name: Upload GitHub Pages report
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy GitHub Pages report
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Add report to job summary
+        env:
+          REPORT_URL: ${{ steps.deployment.outputs.page_url }}
+        run: echo "[E2E HTML report and screenshots]($REPORT_URL)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Add report to pull request
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          REPORT_URL: ${{ steps.deployment.outputs.page_url }}
+        with:
+          script: |
+            const marker = '<!-- e2e-html-report -->';
+            const body = `${marker}\n[E2E HTML report and screenshots](${process.env.REPORT_URL})\n\nThis link always opens the latest published report.`;
+            const parameters = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            };
+            const comments = await github.paginate(github.rest.issues.listComments, parameters);
+            const existingComment = comments.find(comment => comment.body?.includes(marker));
+            if (existingComment) {
+              await github.rest.issues.updateComment({ ...parameters, comment_id: existingComment.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...parameters, body });
+            }
