@@ -26,7 +26,7 @@ Key project areas:
 ## Toolchain and Compatibility
 
 - Use the checked-in Gradle wrapper, currently Gradle `9.8.2`.
-- Run Gradle and CI with JDK 21.
+- Run Gradle, unit tests, and the main CI build with JDK 21. The `integrationTest` task uses JDK 25.
 - Compile Java/Kotlin bytecode for JVM 17.
 - Kotlin plugin `2.3.0` uses Kotlin API `1.9` for compatibility with the minimum IDE.
 - Compile against IntelliJ IDEA Community `2023.3.8`.
@@ -54,6 +54,7 @@ Other useful tasks:
 
 ```bash
 ./gradlew runIde
+./gradlew integrationTest
 ./gradlew generateParser generateLexer
 ./gradlew test --rerun-tasks
 ```
@@ -87,6 +88,11 @@ Other useful tasks:
   branch parsing.
 - Use JUnit 5 assertions and MockK, following existing test conventions.
 - Prefer focused unit tests unless the behavior depends on the IntelliJ runtime.
+- Put real-IDE E2E tests in `src/integrationTest` and run them with `./gradlew integrationTest` on JDK 25.
+- Keep E2E automation cross-platform: use Driver remote APIs instead of native input, OS window checks, or OS-specific
+  branches. On Linux, Starter manages Xvfb; `E2E_IDE_PATH` may point to an existing IDE on any OS.
+- E2E failure diagnostics are in `build/test-results/integrationTest`, `build/reports/tests/integrationTest`, and
+  `out/ide-tests`.
 - Test both value-present and value-missing cases for formatting and replacements.
 - For generated language changes, regenerate sources and run at least `./gradlew test`.
 

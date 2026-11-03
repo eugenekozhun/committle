@@ -24,6 +24,10 @@ sourceSets {
     main {
         java.srcDirs("src/main/gen")
     }
+    create("integrationTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
 }
 
 java {
@@ -39,11 +43,20 @@ repositories {
     }
 }
 
+configurations.named("integrationTestImplementation") {
+    extendsFrom(configurations.testImplementation.get())
+}
+
 dependencies {
     intellijPlatform {
         intellijIdeaCommunity("2023.3.8")
         bundledPlugin("Git4Idea")
         testFramework(TestFrameworkType.Platform)
+        testFramework(
+            TestFrameworkType.Starter,
+            version = "262.11879.100",
+            configurationName = "integrationTestImplementation"
+        )
     }
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJson")
@@ -51,6 +64,23 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.mockk:mockk:$mockkVersion")
+
+    add("integrationTestImplementation", "org.kodein.di:kodein-di-jvm:7.20.2")
+    add("integrationTestImplementation", "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.10.1")
+    "integrationTestRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+    "integrationTestRuntimeOnly"("org.jetbrains.teamcity:serviceMessages:2024.07")
+}
+
+intellijPlatformTesting.testIdeUi.register("integrationTest") {
+    task {
+        val integrationTestSourceSet = sourceSets.getByName("integrationTest")
+        testClassesDirs = integrationTestSourceSet.output.classesDirs
+        classpath = integrationTestSourceSet.runtimeClasspath
+        javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) })
+        systemProperty("e2e.ide.version", "2026.2.4")
+        System.getenv("E2E_IDE_PATH")?.let { systemProperty("e2e.ide.path", it) }
+        useJUnitPlatform()
+    }
 }
 
 changelog {
