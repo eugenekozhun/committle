@@ -34,6 +34,18 @@ class GenerateCommitMessageActionTest {
 
     @Test
     fun `generation failure shows error notification without updating editor`() {
+        verifyGenerationFailure(GenerateCommitMessageAction(), expectedBreakingChange = false)
+    }
+
+    @Test
+    fun `breaking change action passes breaking mode to formatter`() {
+        verifyGenerationFailure(GenerateBreakingChangeCommitMessageAction(), expectedBreakingChange = true)
+    }
+
+    private fun verifyGenerationFailure(
+        action: BaseGenerateCommitMessageAction,
+        expectedBreakingChange: Boolean
+    ) {
         val project = mockk<Project>()
         val event = mockk<AnActionEvent>()
         val commitMessage = mockk<CommitMessage>()
@@ -46,19 +58,23 @@ class GenerateCommitMessageActionTest {
 
         every { event.project } returns project
         every { event.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) } returns commitMessage
+        every { event.getData(VcsDataKeys.SELECTED_CHANGES) } returns null
         mockkObject(CommitMessageGenerationContext.Companion)
-        every { CommitMessageGenerationContext.from(event, project) } returns context
+        every { CommitMessageGenerationContext.captureChanges(event) } returns emptyList()
+        every { CommitMessageGenerationContext.create(project, emptyList(), null) } returns context
         mockkStatic(CoroutineScopeService::class)
         every { CoroutineScopeService.getInstance(project) } returns scopeService
         mockkStatic(CommitMessageFormatterDefaultImpl::class)
         every { CommitMessageFormatterDefaultImpl.getInstance(project) } returns formatter
         mockkStatic(CaretServiceDefaultImpl::class)
         every { CaretServiceDefaultImpl.getInstance(project) } returns caretService
-        coEvery { formatter.getFormattedCommitMessage(context) } throws PatternSyntaxException("Unclosed group", "[", 0)
+        coEvery {
+            formatter.getFormattedCommitMessage(match { it.isBreakingChange == expectedBreakingChange })
+        } throws PatternSyntaxException("Unclosed group", "[", 0)
         mockkStatic("com.kozhun.commitmessagetemplate.ui.util.ProjectExtentionsKt")
         justRun { project.showCommittleNotification(any(), any()) }
 
-        GenerateCommitMessageAction().actionPerformed(event)
+        action.actionPerformed(event)
 
         verify {
             project.showCommittleNotification(

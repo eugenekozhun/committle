@@ -7,6 +7,7 @@ import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageFormatter
 import com.kozhun.commitmessagetemplate.service.formatter.CommitMessageGenerationContext
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTaskIdReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.BranchTypeReplacer
+import com.kozhun.commitmessagetemplate.service.replacer.impl.BreakingChangeReplacer
 import com.kozhun.commitmessagetemplate.service.replacer.impl.FilePathScopeReplacer
 import com.kozhun.commitmessagetemplate.service.whitespace.impl.WhitespaceServiceDefaultImpl
 import com.kozhun.commitmessagetemplate.storage.SettingsStorage
@@ -21,7 +22,8 @@ class CommitMessageFormatterDefaultImpl(
     private val replacers = listOf(
         BranchTypeReplacer.getInstance(project),
         BranchTaskIdReplacer.getInstance(project),
-        FilePathScopeReplacer.getInstance(project)
+        FilePathScopeReplacer.getInstance(project),
+        BreakingChangeReplacer.getInstance(project)
     )
 
     override suspend fun getFormattedCommitMessage(context: CommitMessageGenerationContext): String {

@@ -67,11 +67,11 @@ public class _CMTLexer implements FlexLexer {
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
     "\11\0\5\1\22\0\1\1\3\0\1\2\34\0\1\3"+
-    "\1\0\1\4\1\5\1\6\3\0\1\7\1\0\1\10"+
-    "\2\0\1\11\1\12\1\13\1\0\1\14\1\15\1\16"+
-    "\4\0\1\17\5\0\1\20\45\0\1\21\32\0\1\21"+
-    "\u01df\0\1\21\177\0\13\21\35\0\2\21\5\0\1\21"+
-    "\57\0\1\21\240\0\1\21\377\0";
+    "\1\4\1\5\1\6\1\7\1\0\1\10\1\11\1\12"+
+    "\1\0\1\13\2\0\1\14\1\15\1\16\1\0\1\17"+
+    "\1\20\1\21\4\0\1\22\5\0\1\23\45\0\1\24"+
+    "\32\0\1\24\u01df\0\1\24\177\0\13\24\35\0\2\24"+
+    "\5\0\1\24\57\0\1\24\240\0\1\24\377\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1280];
@@ -98,11 +98,11 @@ public class _CMTLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\2\1\16\0\1\3\1\0\1\4"+
-    "\4\0\1\5\6\0\1\6";
+    "\1\0\1\1\1\2\2\1\22\0\1\3\2\0\1\4"+
+    "\6\0\1\5\15\0\1\6\1\7";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[34];
+    int [] result = new int[49];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -127,14 +127,16 @@ public class _CMTLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\22\0\44\0\66\0\110\0\132\0\154\0\176"+
-    "\0\220\0\242\0\264\0\306\0\330\0\352\0\374\0\u010e"+
-    "\0\u0120\0\u0132\0\u0144\0\110\0\u0156\0\110\0\u0168\0\u017a"+
-    "\0\u018c\0\u019e\0\110\0\u01b0\0\u01c2\0\u01d4\0\u01e6\0\u01f8"+
-    "\0\u020a\0\110";
+    "\0\0\0\25\0\52\0\77\0\124\0\151\0\176\0\223"+
+    "\0\250\0\275\0\322\0\347\0\374\0\u0111\0\u0126\0\u013b"+
+    "\0\u0150\0\u0165\0\u017a\0\u018f\0\u01a4\0\u01b9\0\u01ce\0\124"+
+    "\0\u01e3\0\u01f8\0\124\0\u020d\0\u0222\0\u0237\0\u024c\0\u0261"+
+    "\0\u0276\0\124\0\u028b\0\u02a0\0\u02b5\0\u02ca\0\u02df\0\u02f4"+
+    "\0\u0309\0\u031e\0\u0333\0\u0348\0\u035d\0\u0372\0\u0387\0\124"+
+    "\0\124";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[34];
+    int [] result = new int[49];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -157,18 +159,22 @@ public class _CMTLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\2\1\3\1\4\16\2\1\5\1\2\2\0\16\2"+
-    "\2\0\1\3\24\0\1\6\10\0\1\7\1\10\30\0"+
-    "\1\11\22\0\1\12\20\0\1\13\13\0\1\14\16\0"+
-    "\1\15\17\0\1\16\24\0\1\17\17\0\1\20\14\0"+
-    "\1\21\26\0\1\22\16\0\1\23\17\0\1\24\31\0"+
-    "\1\25\11\0\1\26\33\0\1\27\21\0\1\30\10\0"+
-    "\1\31\25\0\1\32\13\0\1\33\26\0\1\34\24\0"+
-    "\1\35\13\0\1\36\30\0\1\37\12\0\1\40\24\0"+
-    "\1\41\20\0\1\42\10\0";
+    "\1\2\1\3\1\4\21\2\1\5\1\2\2\0\21\2"+
+    "\2\0\1\3\27\0\1\6\1\7\12\0\1\10\1\11"+
+    "\47\0\1\12\10\0\1\13\26\0\1\14\22\0\1\15"+
+    "\16\0\1\16\11\0\1\17\34\0\1\20\22\0\1\21"+
+    "\27\0\1\22\22\0\1\23\11\0\1\24\30\0\1\25"+
+    "\33\0\1\26\21\0\1\27\20\0\1\30\30\0\1\31"+
+    "\32\0\1\32\12\0\1\33\40\0\1\34\13\0\1\35"+
+    "\35\0\1\36\13\0\1\37\26\0\1\40\26\0\1\41"+
+    "\14\0\1\42\26\0\1\43\31\0\1\44\32\0\1\45"+
+    "\21\0\1\46\11\0\1\47\31\0\1\50\23\0\1\51"+
+    "\34\0\1\52\6\0\1\53\33\0\1\54\26\0\1\55"+
+    "\25\0\1\56\17\0\1\57\30\0\1\60\17\0\1\61"+
+    "\15\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[540];
+    int [] result = new int[924];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -206,11 +212,11 @@ public class _CMTLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\3\1\1\11\16\0\1\11\1\0\1\11\4\0"+
-    "\1\11\6\0\1\11";
+    "\1\0\3\1\1\11\22\0\1\11\2\0\1\11\6\0"+
+    "\1\11\15\0\2\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[34];
+    int [] result = new int[49];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -528,32 +534,37 @@ public class _CMTLexer implements FlexLexer {
             { return OTHER_TEXT;
             }
           // fall through
-          case 7: break;
+          case 8: break;
           case 2:
             { return WHITE_SPACE;
             }
           // fall through
-          case 8: break;
+          case 9: break;
           case 3:
             { return TYPE;
             }
           // fall through
-          case 9: break;
+          case 10: break;
           case 4:
             { return SCOPE;
             }
           // fall through
-          case 10: break;
+          case 11: break;
           case 5:
             { return TASK_ID;
             }
           // fall through
-          case 11: break;
+          case 12: break;
           case 6:
             { return CARET_POSITION;
             }
           // fall through
-          case 12: break;
+          case 13: break;
+          case 7:
+            { return BREAKING_CHANGE;
+            }
+          // fall through
+          case 14: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

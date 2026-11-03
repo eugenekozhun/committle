@@ -102,6 +102,7 @@ class CMTSettingsPage(
                     resourceBundle.getString("settings.message-pattern-notes.task-id"),
                     resourceBundle.getString("settings.message-pattern-notes.type"),
                     resourceBundle.getString("settings.message-pattern-notes.scope"),
+                    resourceBundle.getString("settings.message-pattern-notes.breaking-change"),
                     resourceBundle.getString("settings.message-pattern-notes.caret-position")
                 ).joinToString(separator = "<br/>")
                 cell(ContextHelpLabel.create(patternHelp, "Help")).align(AlignX.RIGHT)

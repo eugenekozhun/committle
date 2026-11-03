@@ -27,6 +27,7 @@ class CMTCompletionContributor : CompletionContributor(), DumbAware {
                         createVariableLookup("\$TASK_ID", "Task identifier from branch name"),
                         createVariableLookup("\$TYPE", "Commit type from branch name"),
                         createVariableLookup("\$SCOPE", "Scope from file paths"),
+                        createVariableLookup("\$BREAKING_CHANGE", "Breaking change marker for the dedicated action"),
                         createVariableLookup("\$CARET_POSITION", "Cursor placement after insertion")
                     )
 

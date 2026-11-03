@@ -19,8 +19,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GenerateCommitMessageAction : DumbAwareAction() {
-    private val logger = Logger.getInstance(GenerateCommitMessageAction::class.java)
+abstract class BaseGenerateCommitMessageAction(
+    private val isBreakingChange: Boolean
+) : DumbAwareAction() {
+    private val logger = Logger.getInstance(javaClass)
 
     init {
         isEnabledInModalContext = true
@@ -31,11 +33,14 @@ class GenerateCommitMessageAction : DumbAwareAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val commitMessage = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as? CommitMessage ?: return
-        val context = CommitMessageGenerationContext.from(e, project)
+        val changes = CommitMessageGenerationContext.captureChanges(e)
+        val selectedChange = e.getData(VcsDataKeys.SELECTED_CHANGES)?.firstOrNull() ?: changes.firstOrNull()
         val scope = CoroutineScopeService.getInstance(project).coroutineScope
 
         scope.launch {
             try {
+                val context = CommitMessageGenerationContext.create(project, changes, selectedChange)
+                    .copy(isBreakingChange = isBreakingChange)
                 val formatter = CommitMessageFormatterDefaultImpl.getInstance(project)
                 val caretService = CaretServiceDefaultImpl.getInstance(project)
                 val (message, offset) = formatter.getFormattedCommitMessage(context)
@@ -69,4 +74,6 @@ class GenerateCommitMessageAction : DumbAwareAction() {
         }
     }
 }
+
+class GenerateCommitMessageAction : BaseGenerateCommitMessageAction(isBreakingChange = false)
 

@@ -19,7 +19,7 @@ class SettingsDraft(
     }
 
     fun apply() {
-        settingsStorage.loadState(state.toExportableSettings().toSettingsState())
+        settingsStorage.state.copyFrom(state)
     }
 
     fun isModified(): Boolean {

@@ -7,6 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public class CMTVisitor extends PsiElementVisitor {
 
+  public void visitBreakingChange(@NotNull CMTBreakingChange o) {
+    visitPsiElement(o);
+  }
+
   public void visitCaretPosition(@NotNull CMTCaretPosition o) {
     visitPsiElement(o);
   }

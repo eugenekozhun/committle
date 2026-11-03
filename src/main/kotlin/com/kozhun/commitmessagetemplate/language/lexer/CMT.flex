@@ -30,6 +30,7 @@ TEXT_SAFE=[^$\s]+
   "\$TASK_ID"         { return TASK_ID; }
   "\$TYPE"            { return TYPE; }
   "\$SCOPE"           { return SCOPE; }
+  "\$BREAKING_CHANGE" { return BREAKING_CHANGE; }
   "\$CARET_POSITION"  { return CARET_POSITION; }
   {WHITE_SPACE}       { return WHITE_SPACE; }
   {TEXT_SAFE}         { return OTHER_TEXT; }

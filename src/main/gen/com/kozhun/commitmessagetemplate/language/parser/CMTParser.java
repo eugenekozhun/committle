@@ -36,6 +36,17 @@ public class CMTParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // '$BREAKING_CHANGE'
+  public static boolean breaking_change(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "breaking_change")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, BREAKING_CHANGE, "<breaking change>");
+    result_ = consumeToken(builder_, "$BREAKING_CHANGE");
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
+  }
+
+  /* ********************************************************** */
   // '$CARET_POSITION'
   public static boolean caret_position(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "caret_position")) return false;
@@ -125,13 +136,14 @@ public class CMTParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // task_id | type | scope | caret_position
+  // task_id | type | scope | breaking_change | caret_position
   static boolean variable_(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "variable_")) return false;
     boolean result_;
     result_ = task_id(builder_, level_ + 1);
     if (!result_) result_ = type(builder_, level_ + 1);
     if (!result_) result_ = scope(builder_, level_ + 1);
+    if (!result_) result_ = breaking_change(builder_, level_ + 1);
     if (!result_) result_ = caret_position(builder_, level_ + 1);
     return result_;
   }
