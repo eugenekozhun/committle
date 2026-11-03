@@ -21,6 +21,7 @@
 - Hardened commit-message generation by capturing VCS context before background execution, reporting failures, and using
   configured defaults when branch metadata is unavailable.
 - Settings import no longer persists values until Apply, and regular-expression settings are validated on Apply.
+- Settings are now written to disk on Apply instead of being lost after an IDE restart.
 
 ### Security
 
