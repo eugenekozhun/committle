@@ -22,6 +22,8 @@
   configured defaults when branch metadata is unavailable.
 - Settings import no longer persists values until Apply, and regular-expression settings are validated on Apply.
 - Settings are now written to disk on Apply instead of being lost after an IDE restart.
+- Commit message generation no longer accesses the Git repository manager on the EDT, which threw
+  «Access from Event Dispatch Thread is not allowed» when invoking the insertion actions.
 
 ### Security
 

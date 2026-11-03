@@ -33,11 +33,14 @@ abstract class BaseGenerateCommitMessageAction(
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val commitMessage = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as? CommitMessage ?: return
-        val context = CommitMessageGenerationContext.from(e, project).copy(isBreakingChange = isBreakingChange)
+        val changes = CommitMessageGenerationContext.captureChanges(e)
+        val selectedChange = e.getData(VcsDataKeys.SELECTED_CHANGES)?.firstOrNull() ?: changes.firstOrNull()
         val scope = CoroutineScopeService.getInstance(project).coroutineScope
 
         scope.launch {
             try {
+                val context = CommitMessageGenerationContext.create(project, changes, selectedChange)
+                    .copy(isBreakingChange = isBreakingChange)
                 val formatter = CommitMessageFormatterDefaultImpl.getInstance(project)
                 val caretService = CaretServiceDefaultImpl.getInstance(project)
                 val (message, offset) = formatter.getFormattedCommitMessage(context)

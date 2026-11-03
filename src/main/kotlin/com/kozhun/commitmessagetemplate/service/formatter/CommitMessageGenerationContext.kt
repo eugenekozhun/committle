@@ -20,17 +20,26 @@ data class CommitMessageGenerationContext(
         get() = repository?.currentBranch?.name
 
     companion object {
-        fun from(anActionEvent: AnActionEvent, project: Project): CommitMessageGenerationContext {
+        /**
+         * Captures VCS changes from the action event. Must be called on EDT inside `actionPerformed`;
+         * the event itself must not be retained afterwards.
+         */
+        fun captureChanges(anActionEvent: AnActionEvent): List<Change> {
             val panel = anActionEvent.getData(Refreshable.PANEL_KEY) as? CheckinProjectPanel
-            val changes = panel?.selectedChanges?.toList()
+            return panel?.selectedChanges?.toList()
                 ?: anActionEvent.getData(VcsDataKeys.CHANGES)?.toList()
                 .orEmpty()
+        }
+
+        /**
+         * Resolves repository data. Must be called on a background thread:
+         * [GitRepositoryManager.getRepositoryForFile] asserts non-EDT access.
+         */
+        fun create(project: Project, changes: List<Change>, selectedChange: Change?): CommitMessageGenerationContext {
             val affectedPaths = ChangeListManager.getInstance(project)
                 .affectedPaths
                 .mapNotNullTo(mutableListOf()) { it.path }
             val repositoryManager = GitRepositoryManager.getInstance(project)
-            val selectedChange = anActionEvent.getData(VcsDataKeys.SELECTED_CHANGES)?.firstOrNull()
-                ?: changes.firstOrNull()
             val repository = selectedChange
                 ?.virtualFile
                 ?.let(repositoryManager::getRepositoryForFile)

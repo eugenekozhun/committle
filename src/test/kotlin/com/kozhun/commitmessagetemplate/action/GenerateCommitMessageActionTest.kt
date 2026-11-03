@@ -58,8 +58,10 @@ class GenerateCommitMessageActionTest {
 
         every { event.project } returns project
         every { event.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) } returns commitMessage
+        every { event.getData(VcsDataKeys.SELECTED_CHANGES) } returns null
         mockkObject(CommitMessageGenerationContext.Companion)
-        every { CommitMessageGenerationContext.from(event, project) } returns context
+        every { CommitMessageGenerationContext.captureChanges(event) } returns emptyList()
+        every { CommitMessageGenerationContext.create(project, emptyList(), null) } returns context
         mockkStatic(CoroutineScopeService::class)
         every { CoroutineScopeService.getInstance(project) } returns scopeService
         mockkStatic(CommitMessageFormatterDefaultImpl::class)
