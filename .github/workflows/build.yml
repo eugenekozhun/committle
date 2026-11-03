@@ -49,6 +49,7 @@ jobs:
           path: |
             build/test-results/integrationTest/
             build/reports/tests/integrationTest/
-            out/ide-tests/
+            out/ide-tests/tests/**/log/
+            out/ide-tests/tests/**/reports/
           if-no-files-found: warn
           retention-days: 7

@@ -86,7 +86,8 @@ The tests contain no OS-specific branches or native mouse/keyboard automation. W
 graphical session; on Linux, Starter manages Xvfb when no display is available.
 
 JUnit reports are written to `build/test-results/integrationTest/` and `build/reports/tests/integrationTest/`.
-IDE logs and failure screenshots are under `out/ide-tests/`. CI uploads these paths even when a test fails.
+IDE logs and failure screenshots are under `out/ide-tests/tests/**/log/`; test performance reports are in the adjacent
+`reports/` directories. CI uploads only these diagnostic directories, not the IDE distribution and system caches.
 
 ## Working with the CMT Language
 
