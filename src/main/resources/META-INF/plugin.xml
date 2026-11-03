@@ -30,7 +30,8 @@
         <h3>🛠️ How to Use</h3>
         <ul>
             <li>Configure your template in <strong>Settings → Version Control → Committle</strong>.</li>
-            <li>Open the commit dialog and click <em>Insert Pattern Message</em> or use the shortcut <strong>Ctrl+Shift+T</strong>.</li>
+            <li>Open the commit dialog and click <em>Insert Pattern Message</em> or use the shortcut <strong>Ctrl+Shift+T</strong>
+                (<strong>Ctrl+Shift+B</strong> for a breaking change).</li>
             <li>Adjust generated values (if needed) and commit.</li>
         </ul>
 
@@ -99,6 +100,7 @@
             <add-to-group group-id="Vcs.MessageActionGroup"
                           relative-to-action="com.kozhun.commitmessagetemplate.action.GenerateCommitMessageAction"
                           anchor="after"/>
+            <keyboard-shortcut first-keystroke="ctrl shift B" keymap="$default"/>
         </action>
     </actions>
 

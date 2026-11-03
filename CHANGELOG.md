@@ -5,7 +5,7 @@
 ### Added
 
 - Added the `$BREAKING_CHANGE` template variable and a dedicated insertion action for marking individual Conventional
-  Commits with `!`.
+  Commits with `!`, with the default shortcut **Ctrl+Shift+B**.
 
 ### Changed
 

@@ -59,7 +59,7 @@ your IDE and:
 1. Open **Settings/Preferences → Version Control → Committle**.
 2. Define a commit message template.
 3. Open the commit dialog and click **Insert Pattern Message**, or use the default shortcut **Ctrl+Shift+T**. For a
-   breaking change, click **Insert Breaking Change Pattern Message** instead.
+   breaking change, click **Insert Breaking Change Pattern Message** or use **Ctrl+Shift+B** instead.
 4. Complete the generated message and commit your changes.
 
 ### Template
@@ -114,8 +114,8 @@ feat(ui)!: Remove support for the legacy login flow
 ```
 
 The `!` marker is sufficient under the Conventional Commits specification. You can additionally add a
-`BREAKING CHANGE: <description>` footer to the final message when needed. You can assign a custom shortcut to the
-breaking-change action in the IDE keymap settings.
+`BREAKING CHANGE: <description>` footer to the final message when needed. The breaking-change action has the default
+shortcut **Ctrl+Shift+B**, which you can reassign in the IDE keymap settings.
 
 ### Whitespace and caret
 
