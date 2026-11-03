@@ -155,11 +155,9 @@ The **Build** workflow runs on pull requests and pushes to `main`. The `build` j
 A separate `e2e` job uses JDK 25 on Ubuntu and runs `./gradlew integrationTest --info`. Its JUnit reports, IDE logs, and
 screenshots are uploaded as the `e2e-test-artifacts` artifact after both successful and failed runs.
 
-For same-repository pull requests and pushes to `main`, the `e2e-report` job publishes the HTML report and a screenshot
-gallery to [GitHub Pages](https://eugenekozhun.github.io/committle/). The link is added to the workflow summary and pull
-request. Each deployment replaces the previous report, so the URL always shows the latest published run. IDE logs remain
-available only in the downloadable artifact. Fork pull requests skip Pages deployment because they do not receive the
-required write permissions.
+The `e2e` job also creates an **E2E Tests** check with the JUnit results, failed-test details, and a workflow summary.
+Fork pull requests skip check creation because they receive a read-only token; their results remain available in the job
+log and downloadable artifact.
 
 SonarCloud checks also run for pull requests. Build-distribution and plugin-structure verification should be run locally
 when relevant, or added to CI as a separate infrastructure improvement.
