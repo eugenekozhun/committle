@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="commit-message-template">
+    <option name="pattern" value="$TYPE($SCOPE)$BREAKING_CHANGE: $CARET_POSITION&#10;&#10;Closes $TASK_ID" />
+    <option name="scopeRegex" value="(?&lt;=/)(ui|api)(?=/)" />
+  </component>
+</project>
