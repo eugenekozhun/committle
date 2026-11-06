@@ -4,11 +4,13 @@ import com.intellij.driver.sdk.ui.components.common.ideFrame
 import com.intellij.driver.sdk.waitFor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
 import kotlin.time.Duration.Companion.seconds
 
+@Tag("smoke")
 class CommitGenerationTest : CommittleIdeTest() {
     @Test
     fun `commit message is generated from branch and selected changes`(@TempDir tempDir: Path) {
@@ -16,6 +18,7 @@ class CommitGenerationTest : CommittleIdeTest() {
             ideFrame {
                 val commitPage = CommittleCommitPage(this)
                 commitPage.open()
+                commitPage.selectOnly("UIButton.kt", "ApiClient.kt")
 
                 commitPage.insertPatternMessage()
                 val expectedMessages = setOf(

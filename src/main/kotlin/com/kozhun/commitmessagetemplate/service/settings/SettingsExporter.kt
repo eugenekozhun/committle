@@ -34,12 +34,16 @@ class SettingsExporter(
         }
 
         val selectedFile = fileDialog.files.firstOrNull() ?: return
+        exportTo(selectedFile)
+    }
+
+    fun exportTo(file: java.io.File) {
         val exportableSettings = settingsStorage.state.toExportableSettings()
 
         try {
             val json = Json.encodeToString(exportableSettings)
-            selectedFile.writeText(json)
-            project.showCommittleNotification("Settings exported successfully to ${selectedFile.absolutePath}.", NotificationType.INFORMATION)
+            file.writeText(json)
+            project.showCommittleNotification("Settings exported successfully to ${file.absolutePath}.", NotificationType.INFORMATION)
         } catch (exception: IllegalArgumentException) {
             project.showCommittleNotification("Failed to export settings: ${exception.message}", NotificationType.ERROR)
         }
@@ -52,8 +56,12 @@ class SettingsExporter(
         }
 
         val selectedFile = fileDialog.files.firstOrNull() ?: return null
+        return importFrom(selectedFile)
+    }
+
+    fun importFrom(file: java.io.File): SettingsState? {
         val importableSettings: ExportableSettings = try {
-            Json.decodeFromString(selectedFile.readText())
+            Json.decodeFromString(file.readText())
         } catch (exception: IllegalArgumentException) {
             project.showCommittleNotification("Failed to import settings: ${exception.message}", NotificationType.ERROR)
             return null
