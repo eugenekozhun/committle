@@ -55,6 +55,7 @@ Other useful tasks:
 ```bash
 ./gradlew runIde
 ./gradlew integrationTest
+./gradlew integrationSmokeTest
 ./gradlew generateParser generateLexer
 ./gradlew test --rerun-tasks
 ```
@@ -88,11 +89,14 @@ Other useful tasks:
   branch parsing.
 - Use JUnit 5 assertions and MockK, following existing test conventions.
 - Prefer focused unit tests unless the behavior depends on the IntelliJ runtime.
-- Put real-IDE E2E tests in `src/integrationTest` and run them with `./gradlew integrationTest` on JDK 25.
+- Put real-IDE E2E tests in `src/integrationTest` and run them with `./gradlew integrationTest` on JDK 25. Use
+  `./gradlew integrationSmokeTest` for the `smoke`-tagged compatibility suite; `E2E_IDE_VERSION` overrides the IDE
+  version and `E2E_IDE_PATH` selects an existing installation.
 - Keep E2E automation cross-platform: use Driver remote APIs instead of native input, OS window checks, or OS-specific
   branches. On Linux, Starter manages Xvfb; `E2E_IDE_PATH` may point to an existing IDE on any OS.
-- E2E failure diagnostics are in `build/test-results/integrationTest`, `build/reports/tests/integrationTest`, and
-  `out/ide-tests`. CI publishes JUnit results as the `E2E Tests` check and keeps logs and screenshots in the artifact.
+- E2E failure diagnostics are in `build/test-results/integrationTest`, `build/reports/tests/integrationTest`, the
+  corresponding `integrationSmokeTest` directories, and `out/ide-tests`. CI publishes JUnit checks and keeps logs and
+  screenshots in per-job artifacts.
 - Test both value-present and value-missing cases for formatting and replacements.
 - For generated language changes, regenerate sources and run at least `./gradlew test`.
 

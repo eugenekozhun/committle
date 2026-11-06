@@ -77,9 +77,21 @@ intellijPlatformTesting.testIdeUi.register("integrationTest") {
         testClassesDirs = integrationTestSourceSet.output.classesDirs
         classpath = integrationTestSourceSet.runtimeClasspath
         javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) })
-        systemProperty("e2e.ide.version", "2026.2.4")
+        systemProperty("e2e.ide.version", System.getenv("E2E_IDE_VERSION") ?: "2026.2.4")
         System.getenv("E2E_IDE_PATH")?.let { systemProperty("e2e.ide.path", it) }
         useJUnitPlatform()
+    }
+}
+
+intellijPlatformTesting.testIdeUi.register("integrationSmokeTest") {
+    task {
+        val integrationTestSourceSet = sourceSets.getByName("integrationTest")
+        testClassesDirs = integrationTestSourceSet.output.classesDirs
+        classpath = integrationTestSourceSet.runtimeClasspath
+        javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) })
+        systemProperty("e2e.ide.version", System.getenv("E2E_IDE_VERSION") ?: "2026.2.4")
+        System.getenv("E2E_IDE_PATH")?.let { systemProperty("e2e.ide.path", it) }
+        useJUnitPlatform { includeTags("smoke") }
     }
 }
 

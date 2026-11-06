@@ -67,12 +67,21 @@ Run the E2E suite with JDK 25 available to Gradle:
 
 ```bash
 ./gradlew integrationTest
+./gradlew integrationSmokeTest
+```
+
+`integrationSmokeTest` runs the smaller `smoke`-tagged suite used for minimum-IDE and cross-platform compatibility.
+Set `E2E_IDE_VERSION` to override the default `2026.2.4` IDE, for example:
+
+```bash
+E2E_IDE_VERSION=2023.3.8 ./gradlew integrationSmokeTest
 ```
 
 The task builds the plugin ZIP, starts the latest supported IntelliJ IDEA with isolated configuration and system
 directories, installs that ZIP, and drives the real Settings and Commit UI through the IntelliJ Driver remote API.
-The scenarios cover plugin startup, settings persistence, regular and breaking-change commit messages, and the exact
-caret position. Git is required because each project test creates its own temporary repository.
+The scenarios cover startup, template variables, selected changes, case transformations, whitespace, caret handling,
+settings lifecycle and validation, synonyms, JSON import/export, settings migration, CMT language support, error
+handling, and real Git commits. Git is required because each project test creates its own temporary repository.
 
 By default, Starter downloads the pinned IDE version. To use an existing installation instead, set `E2E_IDE_PATH` to
 its installation directory (the `.app` directory on macOS):
@@ -85,7 +94,8 @@ On Windows, use the equivalent environment-variable syntax for your shell and `g
 The tests contain no OS-specific branches or native mouse/keyboard automation. Windows and macOS require an interactive
 graphical session; on Linux, Starter manages Xvfb when no display is available.
 
-JUnit reports are written to `build/test-results/integrationTest/` and `build/reports/tests/integrationTest/`.
+JUnit reports are written to `build/test-results/integrationTest/` and `build/reports/tests/integrationTest/`;
+the smoke task uses the corresponding `integrationSmokeTest` directories.
 IDE logs and failure screenshots are under `out/ide-tests/tests/**/log/`; test performance reports are in the adjacent
 `reports/` directories. CI uploads only these diagnostic directories, not the IDE distribution and system caches.
 
@@ -152,8 +162,9 @@ The **Build** workflow runs on pull requests and pushes to `main`. The `build` j
 ./gradlew clean detekt test assemble --info
 ```
 
-A separate `e2e` job uses JDK 25 on Ubuntu and runs `./gradlew integrationTest --info`. Its JUnit reports, IDE logs, and
-screenshots are uploaded as the `e2e-test-artifacts` artifact after both successful and failed runs.
+A separate `e2e` job uses JDK 25 on Ubuntu and runs `./gradlew integrationTest --info`. The `e2e-smoke` matrix runs
+`integrationSmokeTest` on the minimum IDE and on the latest IDE under Windows and macOS. JUnit reports, IDE logs, and
+screenshots are uploaded as per-job artifacts after both successful and failed runs.
 
 The `e2e` job also creates an **E2E Tests** check with the JUnit results, failed-test details, and a workflow summary.
 Fork pull requests skip check creation because they receive a read-only token; their results remain available in the job

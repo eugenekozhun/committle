@@ -1,6 +1,8 @@
 package com.kozhun.commitmessagetemplate.e2e
 
 import com.intellij.driver.client.Driver
+import com.intellij.driver.client.service
+import com.intellij.driver.sdk.singleProject
 import com.intellij.driver.sdk.waitForIndicators
 import com.intellij.ide.starter.ci.CIServer
 import com.intellij.ide.starter.ci.NoCIServer
@@ -22,6 +24,8 @@ import java.nio.file.Path
 import java.util.concurrent.TimeUnit
 import kotlin.io.path.Path
 import kotlin.io.path.appendText
+import kotlin.io.path.readText
+import kotlin.io.path.writeText
 import kotlin.time.Duration.Companion.minutes
 
 abstract class CommittleIdeTest {
@@ -84,22 +88,54 @@ abstract class CommittleIdeTest {
         }
     }
 
-    protected fun createGitProject(parent: Path): Path {
+    protected fun Driver.settings(configure: SettingsStateRef.() -> Unit) {
+        withContext {
+            service(SettingsStorageRef::class, singleProject()).getState().configure()
+        }
+    }
+
+    protected fun Driver.settingsState(): SettingsStateRef = withContext {
+        service(SettingsStorageRef::class, singleProject()).getState()
+    }
+
+    protected fun createGitProject(
+        parent: Path,
+        branch: String = "feat/CMT-123",
+        dirtyFiles: Boolean = true,
+        configure: (Path) -> Unit = {}
+    ): Path {
         val source = Path.of(requireNotNull(javaClass.getResource("/git-project")).toURI())
         val projectDir = parent.resolve("git-project")
         source.toFile().copyRecursively(projectDir.toFile())
+        configure(projectDir)
 
-        git(projectDir, "init", "-b", "feat/CMT-123")
+        git(projectDir, "init", "-b", branch)
         git(projectDir, "config", "user.name", "Committle E2E")
         git(projectDir, "config", "user.email", "committle-e2e@example.com")
         git(projectDir, "add", ".")
         git(projectDir, "commit", "-m", "test: initial fixture")
-        projectDir.resolve("ui/UIButton.kt").appendText("\n// Updated for E2E\n")
-        projectDir.resolve("api/ApiClient.kt").appendText("\n// Updated for E2E\n")
+        if (dirtyFiles) {
+            projectDir.resolve("ui/UIButton.kt").appendText("\n// Updated for E2E\n")
+            projectDir.resolve("api/ApiClient.kt").appendText("\n// Updated for E2E\n")
+        }
         return projectDir
     }
 
-    private fun git(projectDir: Path, vararg arguments: String) {
+    protected fun replacePattern(projectDir: Path, pattern: String) {
+        val config = projectDir.resolve(".idea/commit-message-template.xml")
+        val escaped = pattern
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace("\"", "&quot;")
+            .replace("\r", "&#13;")
+            .replace("\n", "&#10;")
+        val updated = config.readText().replace(
+            Regex("(<option name=\"pattern\" value=\")[^\"]*(\"\\s*/>)")
+        ) { match -> "${match.groupValues[1]}$escaped${match.groupValues[2]}" }
+        config.writeText(updated)
+    }
+
+    protected fun git(projectDir: Path, vararg arguments: String): String {
         val process = ProcessBuilder("git", *arguments)
             .directory(projectDir.toFile())
             .redirectErrorStream(true)
@@ -107,5 +143,6 @@ abstract class CommittleIdeTest {
         val output = process.inputStream.bufferedReader().readText()
         check(process.waitFor(30, TimeUnit.SECONDS)) { "Git command timed out: ${arguments.joinToString(" ")}" }
         check(process.exitValue() == 0) { "Git command failed: ${arguments.joinToString(" ")}\n$output" }
+        return output.trim()
     }
 }
