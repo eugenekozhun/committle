@@ -70,12 +70,9 @@ Run the E2E suite with JDK 25 available to Gradle:
 ./gradlew integrationSmokeTest
 ```
 
-`integrationSmokeTest` runs the smaller `smoke`-tagged suite used for minimum-IDE and cross-platform compatibility.
-Set `E2E_IDE_VERSION` to override the default `2026.2.4` IDE, for example:
-
-```bash
-E2E_IDE_VERSION=2023.3.8 ./gradlew integrationSmokeTest
-```
+`integrationSmokeTest` runs the smaller `smoke`-tagged suite used for cross-platform compatibility.
+Set `E2E_IDE_VERSION` to override the default `2026.2.4` IDE. The selected IDE must be compatible with the pinned
+Starter version; use `E2E_IDE_PATH` to select an existing installation instead.
 
 The task builds the plugin ZIP, starts the latest supported IntelliJ IDEA with isolated configuration and system
 directories, installs that ZIP, and drives the real Settings and Commit UI through the IntelliJ Driver remote API.
@@ -163,8 +160,8 @@ The **Build** workflow runs on pull requests and pushes to `main`. The `build` j
 ```
 
 A separate `e2e` job uses JDK 25 on Ubuntu and runs `./gradlew integrationTest --info`. The `e2e-smoke` matrix runs
-`integrationSmokeTest` on the minimum IDE and on the latest IDE under Windows and macOS. JUnit reports, IDE logs, and
-screenshots are uploaded as per-job artifacts after both successful and failed runs.
+`integrationSmokeTest` on the latest IDE under Windows and macOS. JUnit reports, IDE logs, and screenshots are uploaded
+as per-job artifacts after both successful and failed runs.
 
 The `e2e` job also creates an **E2E Tests** check with the JUnit results, failed-test details, and a workflow summary.
 Fork pull requests skip check creation because they receive a read-only token; their results remain available in the job

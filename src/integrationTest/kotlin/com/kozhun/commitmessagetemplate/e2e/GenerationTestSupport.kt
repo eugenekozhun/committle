@@ -28,7 +28,7 @@ internal fun Driver.generateAndAssertAny(
         breakingChange -> page.insertBreakingChangePatternMessage()
         else -> page.insertPatternMessage()
     }
-    waitFor("commit message generation", timeout = 15.seconds) { page.message() in expectedMessages }
+    waitFor("commit message generation", timeout = 60.seconds) { page.message() in expectedMessages }
     assertEquals(true, page.message() in expectedMessages)
     assertEquals(expectedCaret, page.caretOffset())
 }

@@ -18,6 +18,7 @@ class CommitGenerationTest : CommittleIdeTest() {
             ideFrame {
                 val commitPage = CommittleCommitPage(this)
                 commitPage.open()
+                commitPage.selectOnly("UIButton.kt", "ApiClient.kt")
 
                 commitPage.insertPatternMessage()
                 val expectedMessages = setOf(

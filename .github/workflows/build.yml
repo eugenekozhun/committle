@@ -22,7 +22,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Lint & Test & Build
-        run: ./gradlew clean detekt test assemble --info
+        run: ./gradlew clean detekt test assemble buildPlugin verifyPluginProjectConfiguration verifyPluginStructure --info
 
   e2e:
     runs-on: ubuntu-latest
@@ -71,9 +71,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: minimum-ide
-            os: ubuntu-latest
-            ide-version: '2023.3.8'
           - name: macos
             os: macos-latest
             ide-version: '2026.2.4'

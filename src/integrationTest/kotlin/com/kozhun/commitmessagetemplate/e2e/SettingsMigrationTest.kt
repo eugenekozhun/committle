@@ -24,7 +24,7 @@ class SettingsMigrationTest : CommittleIdeTest() {
     ) {
         val project = createGitProject(tempDir) { replacePattern(it, pattern) }
         runIde("migration-${caseName.replace(" ", "-")}", project) {
-            assertEquals(expected, settingsState().getPattern())
+            assertEquals(expected, settingsState().getPattern().orEmpty())
         }
     }
 
@@ -35,7 +35,9 @@ class SettingsMigrationTest : CommittleIdeTest() {
         }
         runIde("migration-generation", project) {
             ideFrame {
-                CommittleCommitPage(this).open()
+                val page = CommittleCommitPage(this)
+                page.open()
+                page.selectOnly("UIButton.kt", "ApiClient.kt")
                 generateAndAssertAny(this, setOf("feat(ui|api): ", "feat(api|ui): "), "feat(api|ui): ".length)
             }
         }

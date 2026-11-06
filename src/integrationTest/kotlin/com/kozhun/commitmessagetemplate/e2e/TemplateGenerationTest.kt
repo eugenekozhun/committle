@@ -29,7 +29,9 @@ class TemplateGenerationTest : CommittleIdeTest() {
                 setScopeRegex("ui")
             }
             ideFrame {
-                CommittleCommitPage(this).open()
+                val page = CommittleCommitPage(this)
+                page.open()
+                page.selectOnly("UIButton.kt", "ApiClient.kt")
                 generateAndAssert(this, expectedMessage, expectedCaret ?: expectedMessage.length)
             }
         }
@@ -41,6 +43,7 @@ class TemplateGenerationTest : CommittleIdeTest() {
             ideFrame {
                 val page = CommittleCommitPage(this)
                 page.open()
+                page.selectOnly("UIButton.kt", "ApiClient.kt")
                 page.setMessage("Existing message")
                 commitToolWindow().commitEditor().setSelection(0, 8)
 
@@ -64,7 +67,9 @@ class TemplateGenerationTest : CommittleIdeTest() {
     fun `registered shortcuts generate regular and breaking messages`(@TempDir tempDir: Path) {
         runIde("template-shortcuts", createGitProject(tempDir)) {
             ideFrame {
-                CommittleCommitPage(this).open()
+                val page = CommittleCommitPage(this)
+                page.open()
+                page.selectOnly("UIButton.kt", "ApiClient.kt")
                 generateAndAssertAny(
                     this,
                     setOf("feat(api|ui): \n\nCloses CMT-123", "feat(ui|api): \n\nCloses CMT-123"),
@@ -89,6 +94,7 @@ class TemplateGenerationTest : CommittleIdeTest() {
             ideFrame {
                 val page = CommittleCommitPage(this)
                 page.open()
+                page.selectOnly("UIButton.kt", "ApiClient.kt")
                 generateAndAssert(this, "fix: ", 5)
                 page.typeText("hello")
                 waitFor("typing at generated caret") { page.message() == "fix: hello" }

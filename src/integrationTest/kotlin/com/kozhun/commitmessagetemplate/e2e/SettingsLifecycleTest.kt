@@ -116,7 +116,9 @@ class SettingsLifecycleTest : CommittleIdeTest() {
                     apply()
                     close()
                 }
-                CommittleCommitPage(this).open()
+                val page = CommittleCommitPage(this)
+                page.open()
+                page.selectOnly("UIButton.kt", "ApiClient.kt")
                 generateAndAssertAny(
                     this,
                     setOf("feat(api|ui): \n\nCloses CMT-123", "feat(ui|api): \n\nCloses CMT-123"),
