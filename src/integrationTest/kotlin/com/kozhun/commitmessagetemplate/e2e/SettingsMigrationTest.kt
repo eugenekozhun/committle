@@ -1,6 +1,7 @@
 package com.kozhun.commitmessagetemplate.e2e
 
 import com.intellij.driver.sdk.ui.components.common.ideFrame
+import com.intellij.driver.sdk.waitFor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -11,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Path
 import java.util.stream.Stream
 import kotlin.io.path.writeText
+import kotlin.time.Duration.Companion.seconds
 
 @Tag("smoke")
 class SettingsMigrationTest : CommittleIdeTest() {
@@ -24,6 +26,9 @@ class SettingsMigrationTest : CommittleIdeTest() {
     ) {
         val project = createGitProject(tempDir) { replacePattern(it, pattern) }
         runIde("migration-${caseName.replace(" ", "-")}", project) {
+            waitFor("project name migration", timeout = 60.seconds) {
+                settingsState().getPattern().orEmpty() == expected
+            }
             assertEquals(expected, settingsState().getPattern().orEmpty())
         }
     }
@@ -34,6 +39,9 @@ class SettingsMigrationTest : CommittleIdeTest() {
             replacePattern(it, "${'$'}TYPE(${'$'}PROJECT_NAME): ${'$'}CARET_POSITION")
         }
         runIde("migration-generation", project) {
+            waitFor("project name migration", timeout = 60.seconds) {
+                settingsState().getPattern() == "${'$'}TYPE(${'$'}SCOPE): ${'$'}CARET_POSITION"
+            }
             ideFrame {
                 val page = CommittleCommitPage(this)
                 page.open()
@@ -61,6 +69,9 @@ class SettingsMigrationTest : CommittleIdeTest() {
             )
         }
         runIde("migration-legacy-storage", project) {
+            waitFor("legacy settings migration", timeout = 60.seconds) {
+                settingsState().getPattern() == "${'$'}SCOPE ${'$'}TASK_ID"
+            }
             val state = settingsState()
             assertEquals("${'$'}SCOPE ${'$'}TASK_ID", state.getPattern())
             assertEquals("(?<=/)(ui|api)(?=/)", state.getScopeRegex())
